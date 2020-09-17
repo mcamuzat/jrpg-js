@@ -4,7 +4,10 @@ var level = {
        'height':80, 
        'type':'hiraganawords',
        'map': 'Rogue',
-       'collusion': [0]
+       'collusion': [0,5],
+       'warpzone': [
+           {tile: 5, position: 'random', level:'level2'}
+       ]
     },
     'level2': {
         'width':40, 
@@ -18,7 +21,7 @@ var level = {
         'height':9, 
         'type':'katakanawords',
         'map': 'Plan',
-        'collusion': [0],
+        'collusion': [0,5],
         'plan':  [
                 [1,1,1,5,1,1,5,1,1,1],
                 [1,0,0,0,1,0,0,0,0,1],

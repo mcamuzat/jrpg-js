@@ -1,3 +1,14 @@
+
+// Base class for door 
+var Door = new Phaser.Class({
+    Extends: Phaser.GameObjects.Zone,
+    initialize:
+    function Door(scene, x, y, level) {
+        Phaser.GameObjects.Zone.call(this, scene, x, y, 16,16)
+        this.level = level;
+    }
+});
+
 var WorldScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -16,7 +27,7 @@ var WorldScene = new Phaser.Class({
         // create the map
         var map = this.make.tilemap({ key: 'map' });
         var engine = this.scene.get('EngineScene')
-        engine.generateMap('level1');
+        engine.generateMap('level3');
         var plan = engine.getMapAsArray();
         var map = this.make.tilemap({ data: plan, tileWidth: 32, tileHeight: 32 });
         // first parameter is the name of the tilemap in tiled
@@ -60,8 +71,13 @@ var WorldScene = new Phaser.Class({
         // place the player
         [x,y] = engine.getFreePosition();
         this.player = this.physics.add.sprite(x, y, 'player', 6);
-
-        this.door = this.physics.add.sprite(16, 16, 'door', 5);
+        
+        // add warpzone
+        this.doors = this.physics.add.group({ classType: Door });
+        [x,y] = engine.getFreePosition();
+        door = new Door(this, x, y,'level2');
+        this.doors.add(door);
+        this.physics.add.overlap(this.player, this.doors, this.onMeetDoor, false, this);  
 
         // don't go out of the map
         this.physics.world.bounds.width = map.widthInPixels;
@@ -81,14 +97,14 @@ var WorldScene = new Phaser.Class({
 
         // where the enemies will be
         this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone });
-        for (var i = 0; i < 30; i++) {
-            [x,y ] = engine.getFreePosition();
+        for (var i = 0; i < 0; i++) {
+            [x, y] = engine.getFreePosition();
             // parameters are x, y, width, height
-            this.spawns.create(x, y, 20, 20);
+            this.spawns.create(x, y, 32, 32);
         }
         // add collider
         this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
-        this.physics.add.overlap(this.player, this.door, this.onMeetDoor, false, this);        
+    
     },
     onMeetEnemy: function (player, zone) {
         //this.scene.restart();
@@ -106,7 +122,8 @@ var WorldScene = new Phaser.Class({
         this.scene.switch('BattleScene');
 
     },
-    onMeetDoor: function (player, zone) {
+    onMeetDoor: function (player, door) {
+        console.log(door.level);
         this.scene.restart({level: 'katakanawords'});
         // we move the zone to some other location
     },
