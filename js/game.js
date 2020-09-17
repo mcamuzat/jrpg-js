@@ -19,6 +19,7 @@ var config = {
         BootScene,
         WorldScene,
         BattleScene,
+        EngineScene,
     ]
 };
 var game = new Phaser.Game(config);

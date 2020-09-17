@@ -15,18 +15,10 @@ var WorldScene = new Phaser.Class({
         this.game.level = input.level
         // create the map
         var map = this.make.tilemap({ key: 'map' });
-        var _map = new ROT.Map.Rogue(40, 40, { connected: true });
-        for (var i=0; i<4; i++) _map.create();
-
-        var plan = []
-        _map.create(function (x, y, v) {
-            if (!plan[y]) {
-                plan[y] = [];
-            }
-            plan[y][x] = v;
-        });
+        var engine = this.scene.get('EngineScene')
+        engine.generateMap('level1');
+        var plan = engine.getMapAsArray();
         var map = this.make.tilemap({ data: plan, tileWidth: 32, tileHeight: 32 });
-
         // first parameter is the name of the tilemap in tiled
         var tiles = map.addTilesetImage('tiles');
 
@@ -35,7 +27,7 @@ var WorldScene = new Phaser.Class({
         var obstacles = map.createStaticLayer(0, tiles, 0, 0);
 
         // make all tiles in obstacles collidable
-        obstacles.setCollisionByExclusion([0]);
+        obstacles.setCollisionByExclusion(engine.getCollisionMap());
 
         //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
         this.anims.create({
@@ -65,7 +57,9 @@ var WorldScene = new Phaser.Class({
         });
 
         // our player sprite created through the phycis system
-        this.player = this.physics.add.sprite(50, 100, 'player', 6);
+        // place the player
+        [x,y] = engine.getFreePosition();
+        this.player = this.physics.add.sprite(x, y, 'player', 6);
 
         this.door = this.physics.add.sprite(16, 16, 'door', 5);
 
@@ -88,8 +82,7 @@ var WorldScene = new Phaser.Class({
         // where the enemies will be
         this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone });
         for (var i = 0; i < 30; i++) {
-            var x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
-            var y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+            [x,y ] = engine.getFreePosition();
             // parameters are x, y, width, height
             this.spawns.create(x, y, 20, 20);
         }
