@@ -23,41 +23,37 @@ var BattleScene = new Phaser.Class({
     },
     startBattle: function() {
         // player character - warrior
-        var warrior = new PlayerCharacter(this, 250, 50, "player", 6, "Warrior", 100, 20);        
-        this.add.existing(warrior);
-        
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "Dragon", 50, 3);
-        this.add.existing(dragonblue);
-        
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null,"Dragon2", 50, 3);
-        this.add.existing(dragonOrange);
-        
+        //var warrior = new PlayerCharacter(this, 250, 50, "player", 6, "Warrior", 100, 20);        
+        //this.add.existing(warrior);
         this.index = -1; // currently active unit
         // listen for keyboard events
-        console.log(this.game.level);
-        [hiragana, solution] = this.pickWord(this.game.level);
+        var engine = this.scene.get('EngineScene');
+        [hiragana, solution] = this.pickWord(engine.getQuizz());
         var text = this.add.text(10, 10, hiragana, { color: 'white', fontSize: '20px '});
         var wrong =  this.add.text(40, 40, '', { color: 'white', fontSize: '20px '});
         var element = this.add.dom(200, 200).createFromCache('nameform');
+        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "dragon", hiragana, "helli");
+        this.add.existing(dragonblue);
+        
+        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null,"dragon", "hello", "helli");
+        this.add.existing(dragonOrange);
+        
+        
         element.setPerspective(800);
         element.addListener('keydown').getChildByName('nameField').focus();
         element.on('keydown', function (event) {
-        if (event.key === 'Enter' || event.keyCode === 13) {
-            var inputText = element.getChildByName('nameField');
-           
-            if(solution == inputText.value) {
-                text.destroy();
-                wrong.destroy;
-                this.scene.switch('WorldScene');
-            } else {
-                wrong.text = solution; 
-            }
-        };
-       
-        
-
-
-    },this);
+            if (event.key === 'Enter' || event.keyCode === 13) {
+                var inputText = element.getChildByName('nameField');
+            
+                if(solution == inputText.value) {
+                    text.destroy();
+                    wrong.destroy();
+                    this.scene.switch('WorldScene');
+                } else {
+                    wrong.text = solution; 
+                }
+            };
+        },this);
 
        // this.input.keyboard.on("keydown", function(){console.log(arguments)}, this);   
         //this.scene.run("UIScene");        
@@ -148,17 +144,11 @@ var Unit = new Phaser.Class({
 
     initialize:
 
-    function Unit(scene, x, y, texture, frame, type, hp, damage) {
+    function Unit(scene, x, y, texture, frame, type, question, answer) {
         Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
-        this.type = type;
-        this.maxHp = this.hp = hp;
-        this.damage = damage; // default damage     
+        this.text = scene.add.text(x , y - 30, question, { color: 'white', fontSize: '20px '});
         this.living = true;         
         this.menuItem = null;
-    },
-    // we will use this to notify the menu item when the unit is dead
-    setMenuItem: function(item) {
-        this.menuItem = item;
     },
     // attack the target unit
     attack: function(target) {
@@ -176,7 +166,10 @@ var Unit = new Phaser.Class({
             this.visible = false;   
             this.menuItem = null;
         }
-    }    
+    },
+    preUpdate: function(time, delta) {
+
+    }
 });
 
 var Enemy = new Phaser.Class({
@@ -187,21 +180,6 @@ var Enemy = new Phaser.Class({
         Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
     }
 });
-
-var PlayerCharacter = new Phaser.Class({
-    Extends: Unit,
-
-    initialize:
-    function PlayerCharacter(scene, x, y, texture, frame, type, hp, damage) {
-        Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
-        // flip the image so I don"t have to edit it manually
-        this.flipX = true;
-        
-        this.setScale(2);
-    }
-});
-
-
 // the message class extends containter 
 var Message = new Phaser.Class({
 

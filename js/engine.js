@@ -62,6 +62,11 @@ var EngineScene = new Phaser.Class({
     },
     getCollisionMap() {
         return level[this.level]['collusion']
+    },
+    getDoors() {
+        return level[this.level].doors;
+    },
+    getQuizz() {
+        return level[this.level].type
     }
-
 });

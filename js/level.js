@@ -1,12 +1,13 @@
 var level = {
    'level1': {
        'width':40, 
-       'height':80, 
+       'height':40, 
        'type':'hiraganawords',
        'map': 'Rogue',
        'collusion': [0,5],
-       'warpzone': [
-           {tile: 5, position: 'random', level:'level2'}
+       'doors': [
+           {position: 'random', level:'level3'},
+           {position: 'random', level:'level2'}
        ]
     },
     'level2': {
@@ -14,7 +15,11 @@ var level = {
         'height':40, 
         'type':'katakanawords',
         'map': 'Cellular',
-        'collusion': [0]
+        'collusion': [0],
+        'doors': [
+           {position: 'random', level:'level1'},
+           {position: 'random', level:'level3'}
+       ]
     },
     'level3': {
         'width':10, 
@@ -33,6 +38,10 @@ var level = {
                 [1,0,1,0,1,0,0,1,0,1],
                 [1,0,0,0,1,0,0,0,0,1],
                 [1,1,1,1,1,1,1,1,1,1],
-        ]
+        ],
+        'doors': [
+           {position: 'not-random', level:'level1', x:3, y:0},
+           {position: 'not-random', level:'level2', x:6, y:0}
+       ]
     }
 }
