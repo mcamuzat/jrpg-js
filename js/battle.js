@@ -12,91 +12,49 @@ var BattleScene = new Phaser.Class({
     {    
         // change the background to green
         this.cameras.main.setBackgroundColor("rgba(0, 200, 0, 0.5)");
-        //this.startBattle();
         // on wake event we call startBattle too
-        this.startBattle()
+        this.startBattle();
         this.sys.events.on('wake', this.startBattle, this);  
-        this.index = -1; // currently active unit
-        // listen for keyboard events
-
 
     },
     startBattle: function() {
-        // player character - warrior
-        //var warrior = new PlayerCharacter(this, 250, 50, "player", 6, "Warrior", 100, 20);        
-        //this.add.existing(warrior);
-        this.index = -1; // currently active unit
-        // listen for keyboard events
         var engine = this.scene.get('EngineScene');
-        [hiragana, solution] = this.pickWord(engine.getQuizz());
-        var text = this.add.text(10, 10, hiragana, { color: 'white', fontSize: '20px '});
-        var wrong =  this.add.text(40, 40, '', { color: 'white', fontSize: '20px '});
+        var positions = [{x:50, y:50},{x:50, y:130},{x:50, y:200}];
+        this.enemies = []; 
+        for (let i = 0; i < positions.length; i++) {
+            let [question, answer, help] = engine.getQuestion();
+            this.enemies.push(new BadGuy(this, positions[i].x, positions[i].y, "angband", 2061, "dragon", question, answer,help));
+        }
+        this.indexMonster = 0;
+        this.message = new Message(this, this.events);
+        this.add.existing(this.message);
+        this.nextTurn();        
+    },
+    nextTurn: function() {
+        var engine = this.scene.get('EngineScene');
+        if(this.checkEndBattle()) {           
+            this.endBattle();
+            engine.xp++;
+            engine.saveGame();
+        }
         var element = this.add.dom(200, 200).createFromCache('nameform');
-        var dragonblue = new Enemy(this, 50, 50, "dragonblue", null, "dragon", hiragana, "helli");
-        this.add.existing(dragonblue);
-        
-        var dragonOrange = new Enemy(this, 50, 100, "dragonorrange", null,"dragon", "hello", "helli");
-        this.add.existing(dragonOrange);
-        
-        
         element.setPerspective(800);
         element.addListener('keydown').getChildByName('nameField').focus();
         element.on('keydown', function (event) {
             if (event.key === 'Enter' || event.keyCode === 13) {
                 var inputText = element.getChildByName('nameField');
-            
-                if(solution == inputText.value) {
-                    text.destroy();
-                    wrong.destroy();
-                    this.scene.switch('WorldScene');
+                if(this.enemies[this.indexMonster].answer.indexOf(inputText.value) !== -1) {
+                    this.enemies[this.indexMonster].living = false;
+                    this.enemies[this.indexMonster].destroy();
+                    this.indexMonster++;
+                    this.nextTurn();
                 } else {
-                    wrong.text = solution; 
+                    this.events.emit("Message", {text: this.enemies[this.indexMonster].help, delay:"3000"});
+                    
+                    inputText.value = "";
                 }
             };
         },this);
-
-       // this.input.keyboard.on("keydown", function(){console.log(arguments)}, this);   
-        //this.scene.run("UIScene");        
-    },
-    pickWord:function(vocabulary = 'hiraganawords') {
-        //Checking how many words ther are in the array
-        var nbwords = Dictionnary[vocabulary].length;
-      
-        //Pick a random number between the amount of words and 0
-        var randomWord = Math.floor((Math.random() * nbwords));
-      
-        //Select a random word from the array
-        return Dictionnary[vocabulary][randomWord];
-    },
-    nextTurn: function() {  
-        // if we have victory or game over
-        if(this.checkEndBattle()) {           
-            this.endBattle();
-            return;
-        }
-        do {
-            // currently active unit
-            this.index++;
-            // if there are no more units, we start again from the first one
-            if(this.index >= this.units.length) {
-                this.index = 0;
-            }            
-        } while(!this.units[this.index].living);
-        // if its player hero
-        if(this.units[this.index] instanceof PlayerCharacter) {
-            // we need the player to select action and then enemy
-            this.events.emit("PlayerSelect", this.index);
-        } else { // else if its enemy unit
-            // pick random living hero to be attacked
-            var r;
-            do {
-                r = Math.floor(Math.random() * this.heroes.length);
-            } while(!this.heroes[r].living) 
-            // call the enemy's attack function 
-            this.units[this.index].attack(this.heroes[r]);  
-            // add timer for the next turn, so will have smooth gameplay
-            this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });
-        }
     },     
     // check for game over or victory
     checkEndBattle: function() {        
@@ -106,80 +64,32 @@ var BattleScene = new Phaser.Class({
             if(this.enemies[i].living)
                 victory = false;
         }
-        var gameOver = true;
-        // if all heroes are dead we have game over
-        for(var i = 0; i < this.heroes.length; i++) {
-            if(this.heroes[i].living)
-                gameOver = false;
-        }
-        return victory || gameOver;
+       
+        return victory;
     },
-    // when the player have selected the enemy to be attacked
-    receivePlayerSelection: function(action, target) {
-        if(action == "attack") {            
-            this.units[this.index].attack(this.enemies[target]);              
-        }
-        // next turn in 3 seconds
-        this.time.addEvent({ delay: 3000, callback: this.nextTurn, callbackScope: this });        
-    },    
-    endBattle: function() {       
-        // clear state, remove sprites
-        this.heroes.length = 0;
-        this.enemies.length = 0;
-        for(var i = 0; i < this.units.length; i++) {
-            // link item
-            this.units[i].destroy();            
-        }
-        this.units.length = 0;
-        // sleep the UI
-        this.scene.sleep('UIScene');
-        // return to WorldScene and sleep current BattleScene
+    endBattle: function() {
         this.scene.switch('WorldScene');
     }
 });
 
-// base class for heroes and enemies
-var Unit = new Phaser.Class({
-    Extends: Phaser.GameObjects.Sprite,
-
-    initialize:
-
-    function Unit(scene, x, y, texture, frame, type, question, answer) {
-        Phaser.GameObjects.Sprite.call(this, scene, x, y, texture, frame)
-        this.text = scene.add.text(x , y - 30, question, { color: 'white', fontSize: '20px '});
-        this.living = true;         
-        this.menuItem = null;
-    },
-    // attack the target unit
-    attack: function(target) {
-        if(target.living) {
-            target.takeDamage(this.damage);
-            this.scene.events.emit("Message", this.type + " attacks " + target.type + " for " + this.damage + " damage");
-        }
-    },    
-    takeDamage: function(damage) {
-        this.hp -= damage;
-        if(this.hp <= 0) {
-            this.hp = 0;
-            this.menuItem.unitKilled();
-            this.living = false;
-            this.visible = false;   
-            this.menuItem = null;
-        }
-    },
-    preUpdate: function(time, delta) {
-
+class BadGuy extends Phaser.GameObjects.Sprite {
+    constructor(scene, x, y, texture, frame, type, question, answer, help, hp=50) {
+        super(scene, x, y, texture, frame);
+        this.answer = answer;
+        this.question = question;
+        this.help = help;
+        this.text = scene.add.text(x , y - 50, question, { color: 'white', fontSize: '20px '});
+        this.living = true;
+        this.hp = hp;
+        scene.add.existing(this);
     }
-});
-
-var Enemy = new Phaser.Class({
-    Extends: Unit,
-
-    initialize:
-    function Enemy(scene, x, y, texture, frame, type, hp, damage) {
-        Unit.call(this, scene, x, y, texture, frame, type, hp, damage);
+    destroy()
+    {
+        this.text.destroy();
+        super.destroy();
     }
-});
+};
+
 // the message class extends containter 
 var Message = new Phaser.Class({
 
@@ -199,13 +109,17 @@ var Message = new Phaser.Class({
         this.text.setOrigin(0.5);        
         events.on("Message", this.showMessage, this);
         this.visible = false;
+        this.setSize(160,30);
+        this.setInteractive();
+   
+           
     },
     showMessage: function(text) {
-        this.text.setText(text);
+        this.text.setText(text.text);
         this.visible = true;
         if(this.hideEvent)
             this.hideEvent.remove(false);
-        this.hideEvent = this.scene.time.addEvent({ delay: 2000, callback: this.hideMessage, callbackScope: this });
+        this.hideEvent = this.scene.time.addEvent({ delay: text.delay, callback: this.hideMessage, callbackScope: this });
     },
     hideMessage: function() {
         this.hideEvent = null;
