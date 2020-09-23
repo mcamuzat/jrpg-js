@@ -10,7 +10,7 @@ var BootScene = new Phaser.Class({
 
     preload: function () {
         // map tiles
-        this.load.image('tiles', 'assets/map/tiles.png');
+        this.load.image('tiles', 'assets/map/angband.png');
 
         this.load.html('nameform', 'assets/nameform.html');
         // enemies
@@ -25,6 +25,6 @@ var BootScene = new Phaser.Class({
 
     create: function () {
         // start the WorldScene
-        this.scene.start('WorldScene',{level: 'level3'});
+        this.scene.start('WorldScene',{level: 'outside', x:6, y:16});
     }
 });

@@ -1,67 +1,100 @@
+var UIScene = new Phaser.Class({
 
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function UIScene ()
+    {
+        Phaser.Scene.call(this, { key: 'UIScene', active: true });
+
+        this.score = 0;
+    },
+
+    create: function ()
+    { 
+        
+        //  Our Text object to display the Score
+        var xp = this.add.text(10, 10, 'xp: 0', { font: '12px Arial', fill: '#ffffff' });
+        var life = this.add.text(10, 20, 'life: 0', { font: '12px Arial', fill: '#ffffff' });
+
+        //  Grab a reference to the Game Scene
+        var ourGame = this.scene.get('EngineScene');
+
+        //  Listen for events from it
+        ourGame.events.on('addXp', function (data) {
+            console.log(ourGame.getXp());
+            xp.setText('Score: ' + ourGame.getXp());
+            console.log(data);
+        }, this);
+    }
+});
 // Base class for door 
 var Door = new Phaser.Class({
     Extends: Phaser.GameObjects.Zone,
     initialize:
-    function Door(scene, x, y, level) {
+    function Door(scene, x, y, level, doorX = -1, doorY = -1) {
         Phaser.GameObjects.Zone.call(this, scene, x, y, 16,16)
         this.level = level;
+        this.doorX = doorX;
+        this.doorY = doorY;
     }
 });
-class Pnj extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame, type,path = []) {
-        super(scene, x, y, texture, frame);
+class Pnj extends Phaser.GameObjects.PathFollower {
+    constructor(scene, path, x, y, texture, frame) {
+        super(scene, path, x, y, texture , frame);
+        this.oldx = 0;
+        this.oldy = 0;
+        scene.add.existing(this);
+         //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
         scene.anims.create({
-            key: 'soldat-left',
+            key: 'left-soldat',
             frames: scene.anims.generateFrameNumbers('soldat', { frames: [9, 10, 11, 9] }),
-            frameRate: 10
+            frameRate: 10,
+            repeat: -1
         });
+
         // animation with key 'right'
         scene.anims.create({
-            key: 'soldat-right',
+            key: 'right-soldat',
             frames: scene.anims.generateFrameNumbers('soldat', { frames: [3, 4, 5, 3] }),
             frameRate: 10,
             repeat: -1
         });
         scene.anims.create({
-            key: 'soldat-up',
+            key: 'up-soldat',
             frames: scene.anims.generateFrameNumbers('soldat', { frames: [0, 1, 2, 0] }),
             frameRate: 10,
             repeat: -1
         });
         scene.anims.create({
-            key: 'soldat-down',
+            key: 'down-soldat',
             frames: scene.anims.generateFrameNumbers('soldat', { frames: [6, 7, 8, 6] }),
             frameRate: 10,
             repeat: -1
         });
-        this.path = [[150,150],[100,50],[50,50],[100,100]];
-        this.step = 0;
-        this.speed = 1.5;
-        this.initialPosition = null;
-        scene.add.existing(this);
     }
-
-    lpreUpdate(time, delta) {
-        this.step++;
-        if (this.step >= this.path.length) {
-            this.step = 0;
+    preUpdate() 
+    {
+        super.preUpdate()
+        let dx = this.x - this.oldx;
+        let dy = this.y - this.oldy;
+        if (dx > 0) {
+            this.anims.play('right-soldat', true)
         }
-    
-        [this.x, this.y] = this.path[this.step];
-
-        if (this.scene.cursors.left.isDown) {
-            console.log(this)
-            this.anims.play('soldat-left', true)
-        } else if (this.scene.cursors.right.isDown) {
-            this.anims.play('soldat-right', true)
+        if (dx < 0){
+            this.anims.play('left-soldat', true);
         }
-        else {
-            this.anims.stop();
+        if (dy > 0) {
+            this.anims.play('down-soldat', true)
         }
+        if (dy < 0){
+            this.anims.play('up-soldat', true);
+        }
+        this.oldx = this.x;
+        this.oldy = this.y;
     }
 };
-
 var WorldScene = new Phaser.Class({
 
     Extends: Phaser.Scene,
@@ -76,19 +109,19 @@ var WorldScene = new Phaser.Class({
     },
 
     create: function (input) {
-        this.game.level = input
+        this.game.level = input.level;
         // create the map
         var map = this.make.tilemap({ key: 'map' });
         var engine = this.scene.get('EngineScene');
         engine.loadGame();
         engine.generateMap(input.level);
         var plan = engine.getMapAsArray();
-        var map = this.make.tilemap({ data: plan, tileWidth: 32, tileHeight: 32 });
+        map = this.make.tilemap({ data: plan, tileWidth: 32, tileHeight: 32 });
         // first parameter is the name of the tilemap in tiled
         var tiles = map.addTilesetImage('tiles');
 
         // creating the layers
-        var obstacles = map.createStaticLayer(0, tiles, 0, 0);
+        var obstacles = map.createDynamicLayer(0, tiles, 0, 0);
 
         // make all tiles in obstacles collidable
         obstacles.setCollisionByExclusion(engine.getCollisionMap());
@@ -122,21 +155,29 @@ var WorldScene = new Phaser.Class({
 
         // our player sprite created through the phycis system
         // place the player
-        [x,y] = engine.getFreePosition();
-        this.player = this.physics.add.sprite(x, y, 'player', 6);
-
-        [x,y] = engine.getFreePosition();
-        this.soldat = new Pnj(this,x, y, 'soldat', 6);
+        if (input.x == -1) {
+            var [x,y] = engine.getFreePosition();
+        } else{
+            var [x,y] = [input.x, input.y]
+        }
+        this.player = this.physics.add.sprite(32 * x + 16 , 32 * y +16, 'player', 6);
 
         // add doors
         this.doors = this.physics.add.group({ classType: Door });
         doors = engine.getDoors()
         for (let i = 0; i < doors.length; i++) {
             if (doors[i].position == 'random') {
-                [x,y] = engine.getFreePosition();
+                let [x,y] = engine.getFreePosition();
                 var door = new Door(this, x, y,doors[i].level);
             } else {
-                var door = new Door(this, 32 * doors[i].x + 16 , 32 * doors[i].y + 16 ,doors[i].level);   
+                var door = new Door(
+                    this, 
+                    32 * doors[i].x + 16 ,
+                    32 * doors[i].y + 16 ,
+                    doors[i].level,
+                    doors[i].doorX,
+                    doors[i].doorY,
+                     );   
             }
             this.doors.add(door);
         }
@@ -148,11 +189,14 @@ var WorldScene = new Phaser.Class({
         this.physics.world.bounds.height = map.heightInPixels;
         this.player.setCollideWorldBounds(true);
 
+        this.map = map;
+
         // don't walk on trees
         this.physics.add.collider(this.player, obstacles);
 
         // limit camera to map
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true; // avoid tile bleed
 
@@ -162,12 +206,15 @@ var WorldScene = new Phaser.Class({
         // where the enemies will be
         this.spawns = this.physics.add.group({ classType: Phaser.GameObjects.Zone });
         for (var i = 0; i < engine.getNumbersOfMonster(); i++) {
-            [x, y] = engine.getFreePosition();
+            let [x, y] = engine.getFreePosition();
             // parameters are x, y, width, height
             this.spawns.create(x, y, 32, 32);
         }
         // add collider
         this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
+
+        let levelScene = engine.getLevelClass();
+        levelScene.addScene(this, this.player, engine);
         /*
         this.input.on('pointerdown', function(pointer){
             var dx = Math.abs(this.player.x - pointer.x);
@@ -207,7 +254,7 @@ var WorldScene = new Phaser.Class({
 
     },
     onMeetDoor: function (player, door) {
-        this.scene.restart({level: door.level});
+        this.scene.restart({level: door.level, x:door.doorX, y:door.doorY});
         // we move the zone to some other location
     },
     update: function (time, delta) {

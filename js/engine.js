@@ -24,6 +24,46 @@ var EngineScene = new Phaser.Class({
             case 'Plan':
                var plan = level[input].plan
                break;
+            case 'Jrpg':
+                var plan = level[input].plan;
+                let trad = {
+                    ' ' :   9 + 128 * 23,
+                    's' :  12 + 128 * 23,
+                    'h' :  93 + 128 * 23,
+                    '.' :  30 + 128 * 23,
+                    ',' :  27 + 128 * 23,
+                    'D' :  67 + 128 * 25,
+                    'd' :  81 + 128 * 25,
+                    'V' :  96 + 128 * 24,
+                    'k' :  32 + 128 * 26,
+                    '_' :  84 + 128 * 23,
+                    'H' :  96 + 128 * 23,
+                    '>' :  28 + 128 * 26,
+                    '<' :  29 + 128 * 26,
+                    ':' :  30 + 128 * 23, 
+                    't' :  54 + 128 * 23, 
+                    'T' :  60 + 128 * 23, 
+                    'm' : 117 + 128 * 23, 
+                    'r' :  96 + 128 * 21, 
+                    '~' :  18 + 128 * 23, 
+                    'P' :  69 + 128 * 23, 
+                    'C' :  99 + 128 * 22, 
+                    'i' : 105 + 128 * 22, 
+                    'j' : 123 + 128 * 23, 
+                    'b' :  99 + 128 * 24, 
+                    'S' : 105 + 128 * 24, 
+                    'W' : 111 + 128 * 24, 
+                    'B' :  78 + 128 * 25, 
+                    'K' :  30 + 128 * 26, 
+                    'z' :  72 + 128 * 24, 
+                    'Z' :  75 + 128 * 24, 
+                    'M' :  87 + 128 * 23, 
+                    'Q' :  90 + 128 * 23, 
+                    'E' : 120 + 128 * 24, 
+                };
+
+                plan = plan.map((x) => (x.split("").map((z) => trad[z])));
+                break;
             case 'Cellular':
                 var _map = new ROT.Map.Cellular(
                     level[input].width,
@@ -40,7 +80,7 @@ var EngineScene = new Phaser.Class({
                 });
                 break;
             default:
-                console.log(`Sorry, we are out of ${expr}.`);
+                console.log(`Sorry.`);
         }
 
         this.plan = plan;
@@ -50,17 +90,32 @@ var EngineScene = new Phaser.Class({
         return this.plan;
     },
     getFreePosition: function() {
-        var found = false;
-        while (found == false) {
+     //   var found = false;
+      //  while (found == false) {
             var x = Phaser.Math.RND.between(0, level[this.level].width-1);
             var y = Phaser.Math.RND.between(0, level[this.level].height-1);
-            if(this.plan[y][x] == 0) {
-                found = true;
-            }
-        }
+        //    if(this.getCollisionMap().indexOf(this.plan[y][x]) !== -1) {
+         //       found = true;
+          //  }
+       // }
         return [x*32 + 16,y * 32 + 16]
     },
     getCollisionMap: function() {
+        if (level[this.level].map == 'Jrpg') {
+            return [  9+ 128 * 23, 
+                12+ 128 * 23, 
+                93+ 128 * 23, 
+                30+ 128 * 23, 
+                27+ 128 * 23, 
+                67+ 128 * 25, 
+                81+ 128 * 25, 
+                96+ 128 * 24, 
+                32+ 128 * 26, 
+                84+ 128 * 23, 
+                96+ 128 * 23, 
+                28+ 128 * 26, 
+                29+ 128 * 26]; 
+        }
         return level[this.level]['collision']
     },
     getDoors: function() {
@@ -107,7 +162,8 @@ var EngineScene = new Phaser.Class({
         this.inventory = jrpg.inventory;
         this.money = jrpg.money;
         this.hp = jrpg.hp;
-        this.quests = jrpg.quest;
+        this.quests = jrpg.quests;
+        console.log(this.quests);
     },
     pickWord:function(vocabulary = 'hiraganawords') {
         switch (vocabulary) {
@@ -158,16 +214,20 @@ var EngineScene = new Phaser.Class({
         return (this.inventory.indexOf(item) != -1);
     },
     completeQuest: function(nameOfTheQuest) {
-        this.quests.push(nameOfTheQuest);
+        if (!this.isQuestComplete(nameOfTheQuest)) {
+            this.quests.push(nameOfTheQuest);
+            this.saveGame();
+        }
     },
     isQuestComplete: function(nameOfTheQuest) {
         return (this.quests.indexOf(nameOfTheQuest) != -1); 
     },
     getXp: function(){
-        return this.level.xp;
+        return this.xp;
     },
     gainXp: function(xp){
-
+        this.xp += xp;
+        this.events.emit('addXp',xp);
     },
     isHit: function(damage){
 
@@ -175,5 +235,18 @@ var EngineScene = new Phaser.Class({
     restoreHp: function(){
         this.hp = this.hpmax;
     },
-
+    getLevelClass: function()
+    {
+        switch (level[this.level].class) {
+            case 'level1':
+                return new Level1();
+            case 'outside':
+               return new Outside();
+            case 'hospital':
+                return new Hospital();
+            case 'castle':
+                return new Hospital();
+        }
+        //return new Level1();
+    }
 });
