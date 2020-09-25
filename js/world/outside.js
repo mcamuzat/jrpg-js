@@ -36,6 +36,7 @@ class Outside {
         this.collider.active = false;
         
         this.engine.completeQuest('elven_gate_tax');
+        this.engine.changeText('elven_gate_tax');
 
         if (this.engine.isQuestComplete('elven_gate_tax')) {
             this.scene.map.putTileAt(2900,6,16);

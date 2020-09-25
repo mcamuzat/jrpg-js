@@ -7,28 +7,55 @@ var UIScene = new Phaser.Class({
     function UIScene ()
     {
         Phaser.Scene.call(this, { key: 'UIScene', active: true });
-
-        this.score = 0;
     },
 
     create: function ()
     { 
         
         //  Our Text object to display the Score
-        var xp = this.add.text(10, 10, 'xp: 0', { font: '12px Arial', fill: '#ffffff' });
-        var life = this.add.text(10, 20, 'life: 0', { font: '12px Arial', fill: '#ffffff' });
-
+        var xp = this.add.text(330, 10, 'xp: 0', { font: '12px Arial', fill: '#ffffff' });
+        var life = this.add.text(330, 20, 'life: 0', { font: '12px Arial', fill: '#ffffff' });
+        var text = this.add.text(10, 330, "Lorem ipsum dolor sit amet\n, consectetur adipiscing elit. Aliquam rutrum non mi sed aliquet. Sed dapibus, diam sagittis sagittis blandit, felis magna lobortis magna, ac venenatis urna neque quis diam. In hendrerit a leo suscipit porta. Duis in interdum ante. Mauris eget leo ut elit consequat facilisis. Etiam nibh nisl, suscipit vel lacus in, commodo volutpat nunc. Vivamus sed ex facilisis, convallis urna nec, feugiat nunc. Donec sed urna nisl. Cras iaculis commodo lacus, sed placerat justo tincidunt vel. "
+        , { font: '12px Arial', fill: '#ffffff', wordWrap:{width:480 } });
+        var kanji = new Kanji(this, 320,200,[["十","とお",true],["日","か",false]]);
         //  Grab a reference to the Game Scene
         var ourGame = this.scene.get('EngineScene');
 
         //  Listen for events from it
-        ourGame.events.on('addXp', function (data) {
+        ourGame.events.on('addXp', function () {
             console.log(ourGame.getXp());
             xp.setText('Score: ' + ourGame.getXp());
-            console.log(data);
         }, this);
+        //  Listen for events from it
+        ourGame.events.on('changeText', function (data) {
+             text.setText(data);
+        }, this);
+
     }
 });
+class Kanji extends Phaser.GameObjects.Container {
+    constructor(scene, x, y, furigana) {
+        super(scene, x, y);
+        var graphics = scene.add.graphics();
+        this.add(graphics);
+        graphics.lineStyle(1, 0xffffff, 0.8);
+        graphics.fillStyle(0x031f4c, 0.3);        
+        graphics.strokeRect(0, 0, 180, 30);
+        graphics.fillRect(0, 0, 180, 30);
+        furigana.map((x, index) => {
+            let text = new Phaser.GameObjects.Text(scene, 50 + index * 45 ,15 , x[0], { color: "#ffffff", align: "center", fontSize: 45, wordWrap: { width: 170, useAdvancedWrap: true }});
+            let furigana = new Phaser.GameObjects.Text(scene, 50 + index * 45 + 15, 0 , x[1], { color: "#ffffff", align: "center", fontSize: 10, wordWrap: { width: 170, useAdvancedWrap: true }});
+            this.add(text);
+            this.add(furigana);
+        })
+        
+        scene.add.existing(this);
+    }
+    // ...
+
+    // preUpdate(time, delta) {}
+}
+
 // Base class for door 
 var Door = new Phaser.Class({
     Extends: Phaser.GameObjects.Zone,
@@ -40,6 +67,9 @@ var Door = new Phaser.Class({
         this.doorY = doorY;
     }
 });
+
+
+
 class Pnj extends Phaser.GameObjects.PathFollower {
     constructor(scene, path, x, y, texture, frame) {
         super(scene, path, x, y, texture , frame);
@@ -196,7 +226,8 @@ var WorldScene = new Phaser.Class({
 
         // limit camera to map
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        
+        this.cameras.main.setSize(32*10,32*10);
+        //this.cameras.main.setPosition();
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true; // avoid tile bleed
 
@@ -215,26 +246,7 @@ var WorldScene = new Phaser.Class({
 
         let levelScene = engine.getLevelClass();
         levelScene.addScene(this, this.player, engine);
-        /*
-        this.input.on('pointerdown', function(pointer){
-            var dx = Math.abs(this.player.x - pointer.x);
-            var dy = Math.abs(this.player.y - pointer.y);
-            if (dx > dy) {
-                if (x > this.player.x) {
-                    this.player.x += 32;
-                } else {
-                     this.player.x -= 32;
-                }
-            } else {
-                if (y > this.player.y) {
-                    this.player.y +=32;
-                } else {
-                    this.player.y -=32
-                }
-            }
-            // ...
-         },this);
-         */
+ 
            
     },
     onMeetEnemy: function (player, zone) {

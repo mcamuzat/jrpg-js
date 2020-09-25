@@ -136,7 +136,7 @@ var level = {
             { position: 'not-random', level: 'library', x: 33, y: 34, doorX: 5, doorY: 8 },
             { position: 'not-random', level: 'wizardshop', x: 38, y: 34, doorX: 5, doorY: 8 },
             { position: 'not-random', level: 'blacksmith', x: 41, y: 37, doorX: 5, doorY: 1 },
-            { position: 'not-random', level: 'cave', x: 31, y: 37, doorX: 1, doorY: 7 },
+            { position: 'not-random', level: 'cave', x: 61, y: 37, doorX: 1, doorY: 7 },
         ],
         'monsters': {
             number: 0,
@@ -191,7 +191,8 @@ var level = {
             "BBBBdBBBBBBBBBBBBBBB"
         ],
         'doors': [
-            { position: 'not-random', level: 'outside', x: 4, y: 9, doorX: 2, doorY: 37 },
+            { position: 'not-random', level: 'outside', x: 4, y: 9, doorX: 7, doorY: 9 },
+            { position: 'not-random', level: 'tower_level_1', x: 16, y: 0, doorX: 2, doorY: 1 },
         ],
         'monsters': {
             number: 0,
@@ -312,5 +313,90 @@ var level = {
             type: [1688, 1699]
         },
         class: 'castle'
-    }
+    },
+    'tower_level_1': {
+        'width': 20,
+        'height': 12,
+        'type': 'katakanawords',
+        'map': 'Jrpg',
+        'collision': [0, 5],
+        'plan': [
+            "BBB<BB>BBB",
+            "B...B....B",
+            "B.BBBBBB.B",
+            "B.B....B.B",
+            "B.B.BB.B.B",
+            "B.B..B.B.B",
+            "B.B..B.B.B",
+            "B.B.B..B.B",
+            "B...B....B",
+            "BBBBBBBBBB",
+        ],
+        'doors': [
+            { position: 'not-random', level: 'castle', x: 3, y: 0, doorX: 17, doorY: 1 },
+            { position: 'not-random', level: 'tower_level_2', x: 6, y: 0, doorX: 2, doorY: 1 },
+        ],
+        'monsters': {
+            number: 0,
+            type: [1688, 1699]
+        },
+        class: 'castle'
+    },
+    'tower_level_2': {
+        'width': 20,
+        'height': 12,
+        'type': 'katakanawords',
+        'map': 'Jrpg',
+        'collision': [0, 5],
+        'plan': [
+            "BBB<BB>BBB",
+            "B....B...B",
+            "B.BBBBBB.B",
+            "B.B....B.B",
+            "B.B.B....B",
+            "B.B.BBBBBB",
+            "B.B......B",
+            "B.BBBBB..B",
+            "B........B",
+            "BBBBBBBBBB",
+        ],
+        'doors': [
+            { position: 'not-random', level: 'tower_level_1', x: 3, y: 0, doorX: 7, doorY: 1 },
+            { position: 'not-random', level: 'tower_level_3', x: 6, y: 0, doorX: 2, doorY: 1 },
+        ],
+        'monsters': {
+            number: 0,
+            type: [1688, 1699]
+        },
+        class: 'castle'
+    },
+    'tower_level_3': {
+        'width': 20,
+        'height': 12,
+        'type': 'katakanawords',
+        'map': 'Jrpg',
+        'collision': [0, 5],
+        'plan': [
+            "BBB<BBBBBB",
+            "B........B",
+            "B........B",
+            "B........B",
+            "B........B",
+            "B........B",
+            "B........B",
+            "B........B",
+            "B........B",
+            "BBBBBBBBBB",
+        ],
+        'doors': [
+            { position: 'not-random', level: 'tower_level_2', x: 3, y: 0, doorX: 7, doorY: 1 },
+            { position: 'not-random', level: 'outside', x: 4, y: 5, doorX: 38, doorY: 35 },
+        ],
+        'monsters': {
+            number: 0,
+            type: [1688, 1699]
+        },
+        class: 'castle'
+    },
+
 }

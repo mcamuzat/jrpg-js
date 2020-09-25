@@ -90,14 +90,14 @@ var EngineScene = new Phaser.Class({
         return this.plan;
     },
     getFreePosition: function() {
-     //   var found = false;
-      //  while (found == false) {
+      var found = false;
+      while (found == false) {
             var x = Phaser.Math.RND.between(0, level[this.level].width-1);
             var y = Phaser.Math.RND.between(0, level[this.level].height-1);
-        //    if(this.getCollisionMap().indexOf(this.plan[y][x]) !== -1) {
-         //       found = true;
-          //  }
-       // }
+            if(this.getCollisionMap().indexOf(this.plan[y][x]) !== -1) {
+                found = true;
+            }
+        }
         return [x*32 + 16,y * 32 + 16]
     },
     getCollisionMap: function() {
@@ -163,11 +163,10 @@ var EngineScene = new Phaser.Class({
         this.money = jrpg.money;
         this.hp = jrpg.hp;
         this.quests = jrpg.quests;
-        console.log(this.quests);
     },
     pickWord:function(vocabulary = 'hiraganawords') {
         switch (vocabulary) {
-            case 'kanji':
+            case 'meaning':
                 var dic = '';
                 for (let i = 0; i < 10; i++) {
                     dic = dic + Dictionnary.chapter[i];
@@ -183,8 +182,16 @@ var EngineScene = new Phaser.Class({
                 return [
                     Dictionnary['kanji'][randomKanji], 
                     Dictionnary['english'][randomKanji],
-                    Dictionnary['descriptions'][randomKanji]
+                    Dictionnary['descriptions'][randomKanji],
+                    []
                 ];
+            case 'kanji':
+                //Checking how many words ther are in the array
+                let nbword = Dictionnary['readings'].length;
+                //Pick a random number between the amount of words and 0
+                let randomWord2 = Math.floor((Math.random() * nbword));
+                let [kanji, reading, furigana] = Dictionnary['readings'][randomWord2];
+                return [kanji, reading, reading, furigana];
             default:
                 //Checking how many words ther are in the array
                 let nbwords = Dictionnary[vocabulary].length;
@@ -195,7 +202,7 @@ var EngineScene = new Phaser.Class({
                 //Select a random word from the array
                 let [hiragana, english] =  Dictionnary[vocabulary][randomWord];
 
-                return [hiragana, english, english];
+                return [hiragana, english, english, []];
                 
         }
        
@@ -229,6 +236,9 @@ var EngineScene = new Phaser.Class({
         this.xp += xp;
         this.events.emit('addXp',xp);
     },
+    changeText: function(text){
+        this.events.emit('changeText',text);
+    },
     isHit: function(damage){
 
     },
@@ -245,7 +255,7 @@ var EngineScene = new Phaser.Class({
             case 'hospital':
                 return new Hospital();
             case 'castle':
-                return new Hospital();
+                return new Castle();
         }
         //return new Level1();
     }
