@@ -2,18 +2,18 @@ class Hospital {
     addScene(scene, player, engine) {
         this.scene = scene;
         this.engine = engine
-        var path2 = new Phaser.Curves.Path(16, 16).lineTo(16, 64).lineTo(64,64).lineTo(64,16).lineTo(16,16);
-        let soldat = new Pnj(scene, path2, 0, 0, 'soldat',6);
-        soldat.startFollow({
+        var path2 = new Phaser.Curves.Path(32 * 1 + 16 , 32 * 5 + 16)
+        .lineTo(32 * 8 + 16, 5 * 32 + 16).lineTo(32 * 1 + 16 , 32 * 5 + 16);
+        let nurse = new Pnj(scene, path2, 0, 0, 'nurse',6);
+        nurse.startFollow({
             positionOnPath: true,
-            duration: 3000,
+            duration: 5000,
             repeat: -1,
         });
-        scene.physics.world.enable(soldat);
-        this.collider = scene.physics.add.overlap(player, soldat, this.onMeetSoldat, false, this);
+        scene.physics.world.enable(nurse);
+        this.collider = scene.physics.add.overlap(player, nurse, this.onMeetNurse, false, this);
     }
-    onMeetSoldat(player, soldat){
-        this.engine.gainXp(10);
+    onMeetNurse(player, soldat){
         this.collider.active = false;
         setTimeout(
             function(){

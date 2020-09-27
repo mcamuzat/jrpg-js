@@ -22,13 +22,13 @@ var BattleScene = new Phaser.Class({
         var positions = [{x:50, y:50},{x:50, y:130},{x:50, y:200}];
         this.enemies = []; 
         for (let i = 0; i < positions.length; i++) {
-            let [question, answer, help, furigana] = engine.getQuestion();
+            let [question, answer, help, furigana] = engine.getQuestion(this.registry.get('monsterType'));
             this.enemies.push(new BadGuy(
                 this, 
                 positions[i].x, 
                 positions[i].y, 
-                "angband", 
-                2061, 
+                "angband",
+                this.registry.get('tiles'),
                 question, 
                 answer,
                 help,
@@ -45,7 +45,7 @@ var BattleScene = new Phaser.Class({
         var engine = this.scene.get('EngineScene');
         if(this.checkEndBattle()) {           
             this.endBattle();
-            engine.xp++;
+            engine.gainXp(1);
             engine.saveGame();
         }
         var element = this.add.dom(200, 200).createFromCache('nameform');
@@ -57,9 +57,6 @@ var BattleScene = new Phaser.Class({
                 console.log(this.enemies[this.indexMonster].furigana);
                 if(this.enemies[this.indexMonster].furigana.length > 0) {
                     inputText.value = wanakana.toHiragana(inputText.value);
-                    console.log('huhuhu');
-                    console.log(inputText.value);
-
                 }
                 if(this.enemies[this.indexMonster].answer.indexOf(inputText.value) !== -1) {
                     this.enemies[this.indexMonster].living = false;
@@ -110,7 +107,6 @@ class BadGuy extends Phaser.GameObjects.Sprite {
         }
         this.living = true;
         this.furigana = furigana;
-        console.log(furigana);
         scene.add.existing(this);
     }
     destroy()

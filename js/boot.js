@@ -13,18 +13,17 @@ var BootScene = new Phaser.Class({
         this.load.image('tiles', 'assets/map/angband.png');
 
         this.load.html('nameform', 'assets/nameform.html');
-        // enemies
-        this.load.image("dragonblue", "assets/dragonblue.png");
-        this.load.image("dragonorrange", "assets/dragonorrange.png");
         // our two characters
         this.load.spritesheet('player', 'assets/female-blue.png', { frameWidth: 24, frameHeight: 32 });
         this.load.spritesheet('soldat', 'assets/soldier-axe.png', { frameWidth: 24, frameHeight: 32 });
-        this.load.spritesheet('door', 'assets/map/tiles.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('soldier-elf', 'assets/soldier-elf.png', { frameWidth: 24, frameHeight: 32 });
+        this.load.spritesheet('elf-trader', 'assets/elf-trader.png', { frameWidth: 24, frameHeight: 32 });
+        this.load.spritesheet('nurse', 'assets/nurse.png', { frameWidth: 24, frameHeight: 32 });
         this.load.spritesheet('angband', 'assets/map/angband.png', { frameWidth: 32, frameHeight: 32 });
     },
 
     create: function () {
         // start the WorldScene
-        this.scene.start('WorldScene',{level: 'outside', x:6, y:16});
+        this.scene.start('WorldScene',{level: 'outside', x:15, y:15});
     }
 });

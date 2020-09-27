@@ -65,7 +65,7 @@ var level = {
     'outside': {
         'width': 70,
         'height': 60,
-        'type': 'katakanawords',
+        'type': 'kanji',
         'map': 'Jrpg',
         'collision': [0, 5],
         'plan': [
@@ -138,10 +138,71 @@ var level = {
             { position: 'not-random', level: 'blacksmith', x: 41, y: 37, doorX: 5, doorY: 1 },
             { position: 'not-random', level: 'cave', x: 61, y: 37, doorX: 1, doorY: 7 },
         ],
-        'monsters': {
-            number: 0,
-            type: [1688, 1699]
-        },
+        'monsters': [
+            {
+                probability: 0.1,
+                rangeX: [0, 10],
+                rangeY: [40, 50],
+                type: [
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "green turtle",
+                    "red turtle",
+                    "black turtle",
+                    "brown turtle",
+                    "blue turtle",
+                    "yellow turtle",
+                ],
+                vocabulary: ['hiraganawords', 'kanji', 'katakanawords']
+            },
+            {
+                probability: 0.05,
+                rangeX: [10, 30],
+                rangeY: [40, 50],
+                type: [
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "green turtle",
+                    "red turtle",
+                    "black turtle",
+                    "brown turtle",
+                    "blue turtle",
+                    "yellow turtle",
+                ],
+                vocabulary: ['hiraganawords','kanji', 'katakanawords']
+            },
+            {
+                probability: 0.1,
+                rangeX: [30, 50],
+                rangeY: [40, 60],
+                type: [
+                    "spotty lizard",
+                    "red lizard",
+                    "brown lizard",
+                    "black lizard",
+                    "green lizard",
+                    "red scoprion",
+                    "yellow scoprion",
+                    "gray scoprion",
+                    "blue scoprion",
+                    "brown scoprion",
+                    "black scoprion",
+                ],
+                vocabulary: ['hiraganawords']
+            },
+        ],
         start_position: { position: 'not-random', x: 3, y: 1 },
         class: 'outside'
     },
@@ -166,10 +227,7 @@ var level = {
         'doors': [
             { position: 'not-random', level: 'outside', x: 5, y: 9, doorX: 2, doorY: 37 },
         ],
-        'monsters': {
-            number: 0,
-            type: [1688, 1699]
-        },
+        'monsters': [],
         class: 'hospital'
     },
     'castle': {
@@ -194,10 +252,7 @@ var level = {
             { position: 'not-random', level: 'outside', x: 4, y: 9, doorX: 7, doorY: 9 },
             { position: 'not-random', level: 'tower_level_1', x: 16, y: 0, doorX: 2, doorY: 1 },
         ],
-        'monsters': {
-            number: 0,
-            type: [1688, 1699]
-        },
+        'monsters': [],
         class: 'castle'
     },
     'cave': {
@@ -226,10 +281,28 @@ var level = {
         'doors': [
             { position: 'not-random', level: 'outside', x: 4, y: 9, doorX: 2, doorY: 37 },
         ],
-        'monsters': {
-            number: 0,
-            type: [1688, 1699]
-        },
+        'monsters': [
+            {
+                probability: 0.2,
+                rangeX: [2, 29],
+                rangeY: [2, 14],
+                type: [
+                    "bat 1",
+                    "bat 2",
+                    "bat 3",
+                    "bat 4",
+                    "bat 5",
+                    "skeleton 1",
+                    "skeleton 2",
+                    "skeleton 3",
+                    "skeleton 4",
+                    "skeleton 5",
+                    "skeleton 6",
+                    "skeleton 7",
+                ],
+                vocabulary: ['kanji']
+            }
+        ],
         class: 'castle'
     },
     'library': {
@@ -255,7 +328,7 @@ var level = {
         ],
         'monsters': {
             number: 0,
-            type: [1688, 1699]
+            type: []
         },
         class: 'castle'
     },
@@ -282,7 +355,7 @@ var level = {
         ],
         'monsters': {
             number: 0,
-            type: [1688, 1699]
+            type: []
         },
         class: 'castle'
     },
@@ -310,7 +383,7 @@ var level = {
         ],
         'monsters': {
             number: 0,
-            type: [1688, 1699]
+            type: []
         },
         class: 'castle'
     },
@@ -338,7 +411,20 @@ var level = {
         ],
         'monsters': {
             number: 0,
-            type: [1688, 1699]
+            type: [
+                "bat 1",
+                "bat 2",
+                "bat 3",
+                "bat 4",
+                "bat 5",
+                "skeleton 1",
+                "skeleton 2",
+                "skeleton 3",
+                "skeleton 4",
+                "skeleton 5",
+                "skeleton 6",
+                "skeleton 7",
+            ]
         },
         class: 'castle'
     },
@@ -366,7 +452,20 @@ var level = {
         ],
         'monsters': {
             number: 0,
-            type: [1688, 1699]
+            type: [
+                "bat 1",
+                "bat 2",
+                "bat 3",
+                "bat 4",
+                "bat 5",
+                "skeleton 1",
+                "skeleton 2",
+                "skeleton 3",
+                "skeleton 4",
+                "skeleton 5",
+                "skeleton 6",
+                "skeleton 7",
+            ]
         },
         class: 'castle'
     },
