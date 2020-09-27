@@ -216,10 +216,17 @@ var EngineScene = new Phaser.Class({
     },
     gainItem: function(item) {
         this.inventory.push(item);
-
+        this.events.emit('addItem', item);
     },
     removeItem:function(item) {
-
+        const index = this.inventory.indexOf(item);
+        if (index > -1) {
+            this.inventory.splice(index, 1)
+            this.events.emit('addItem', item);
+        }
+    },
+    getItems: function() {
+        return this.inventory;
     },
     hasItem: function(item) {
         return (this.inventory.indexOf(item) != -1);

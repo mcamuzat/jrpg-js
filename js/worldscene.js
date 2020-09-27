@@ -18,9 +18,7 @@ var UIScene = new Phaser.Class({
         var life = this.add.text(330, 20, 'life: '+ engine.getHp(), { font: '12px Arial', fill: '#ffffff' });
         var money = this.add.text(330, 30, 'money: 0', { font: '12px Arial', fill: '#ffffff' });
         var text = this.add.text(10, 330, "Welcome to the 日本語RPG", { font: '12px Arial', fill: '#ffffff', wordWrap:{width:480 } });
-        //  Grab a reference to the Game Scene
-        
-
+        this.inventory = this.physics.add.group({ classType: Phaser.GameObjects.Sprite });
         //  Listen for events from it
         engine.events.on('addXp', function () {
             xp.setText('Xp: ' + engine.getXp());
@@ -29,8 +27,17 @@ var UIScene = new Phaser.Class({
         engine.events.on('changeText', function (data) {
              text.setText(data);
         }, this);
-        engine.events.on('addMoney', function (data) {
+        engine.events.on('addMoney', function () {
             money.setText('Money: '+ engine.money);
+       }, this);
+       engine.events.on('addItem', function () {
+          this.inventory.clear(true,true); 
+          let items = engine.getItems();
+          for (let i = 0; i < items.length; i++) {
+              let item = items[i];
+              let sprite = new Phaser.GameObjects.Sprite (this,350 + 32 * i + 16, 100 + 16,'angband', engine.translateTile(item));
+              this.inventory.add(sprite,true);
+          }
        }, this);
     }
 });
@@ -250,6 +257,7 @@ var WorldScene = new Phaser.Class({
         }.bind(this));
         let levelScene = engine.getLevelClass();
         levelScene.addScene(this, this.player, engine);
+        
 
     },
     onMeetEnemy: function (player, zone) {
@@ -278,7 +286,7 @@ var WorldScene = new Phaser.Class({
     },
     update: function (time, delta) {
         this.player.body.setVelocity(0);
-        let velocity = 80;
+        let velocity = 300;
         // Horizontal movement
         if (this.cursors.left.isDown) {
             this.player.body.setVelocityX(-velocity);
