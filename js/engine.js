@@ -251,6 +251,8 @@ var EngineScene = new Phaser.Class({
         this.events.emit('changeText',text);
     },
     isHit: function(damage){
+        this.hp -= damage;
+        this.events.emits('changeHp')
 
     },
     receiveMoney: function(amount) {
@@ -282,6 +284,16 @@ var EngineScene = new Phaser.Class({
                 return new Hospital();
             case 'castle':
                 return new Castle();
+            case 'cave':
+                return new Cave();
+            case 'blacksmith':
+                return new Blacksmith();
+            case 'library':
+                return new Library();
+            case 'wizardshop':
+                return new WizardShop();
+            default:
+                console.log(level[this.level].class)
         }
         //return new Level1();
     },

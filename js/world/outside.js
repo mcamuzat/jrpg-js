@@ -69,18 +69,18 @@ class Outside {
             scene.physics.add.overlap(player, brokenSword, this.onMeetBrokenSword, false, this);
         }
         // Oasis
-            let pathArabTrader = new Phaser.Curves
-                .Path( 32 * 44 + 16, 32 * 13 + 16)
-                .lineTo(32 * 46 + 16, 32 * 13 + 16)
-                .lineTo(32 * 44 + 16, 32 * 13 + 16)
-            let arabTrader = new Pnj(scene, pathArabTrader, 0, 0, 'elf-trader', 6);
-            arabTrader.startFollow({
-                positionOnPath: true,
-                duration: 2000,
-                repeat: -1,
-            });
-            scene.physics.add.overlap(player, arabTrader, this.onMeetArabTrader, false, this);
-            scene.physics.world.enable(elfTrader);
+        let pathArabTrader = new Phaser.Curves
+            .Path(32 * 44 + 16, 32 * 13 + 16)
+            .lineTo(32 * 46 + 16, 32 * 13 + 16)
+            .lineTo(32 * 44 + 16, 32 * 13 + 16)
+        let arabTrader = new Pnj(scene, pathArabTrader, 0, 0, 'arab-trader', 6);
+        arabTrader.startFollow({
+            positionOnPath: true,
+            duration: 2000,
+            repeat: -1,
+        });
+        scene.physics.add.overlap(player, arabTrader, this.onMeetArabTrader, false, this);
+        scene.physics.world.enable(arabTrader);
 
         // desert decoration
         scene.addDecoration(57, 23, "skeleton 3");
@@ -143,7 +143,6 @@ class Outside {
         this.engine.completeQuest("broken_sword_complete");
         sword.destroy();
 
-
     }
 
     onMeetElfTrader(player, sword) {
@@ -154,11 +153,19 @@ class Outside {
 
     }
     onMeetArabTrader(player, trader) {
-        this.engine.changeText("Many animals and people have been possessed by kanji demons.\n" +
-            "You may kill the demons by shouting their names.\n" +
-            "I would do that myself, but there are too many names to remember.\n" +
-            "Maybe you should visit the Elven town, it's south east from here.");
-
+        if (this.engine.isQuestComplete('antiheat potion complete')) {
+            this.engine.changeText("So you've drunk the potion.\n You may go to the desert now.");
+        } else {
+            if (!this.engine.isQuestComplete('antiheat potion idea')) {
+                this.engine.completeQuest('antiheat potion idea')
+            }
+            this.engine.changeText(
+                "The desert east of here is so hot.\n" +
+                "You will quickly collapse unless you've drunk a mushroom potion.\n" +
+                "Unfortunately I have no idea what kinds of mushrooms are needed.\n" +
+                "Ask around in the Elven town maybe.\n"
+            );
+        }
     }
 }
 

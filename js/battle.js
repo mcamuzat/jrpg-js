@@ -67,6 +67,7 @@ var BattleScene = new Phaser.Class({
                     this.events.emit("Message", {text: this.enemies[this.indexMonster].help, delay:"3000"});
                     engine.changeText(this.enemies[this.indexMonster].help);
                     inputText.value = "";
+                    engine.isHit(1);
                 }
             };
         },this);

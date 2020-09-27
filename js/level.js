@@ -303,7 +303,7 @@ var level = {
                 vocabulary: ['kanji']
             }
         ],
-        class: 'castle'
+        class: 'cave'
     },
     'library': {
         'width': 20,
@@ -330,7 +330,7 @@ var level = {
             number: 0,
             type: []
         },
-        class: 'castle'
+        class: 'library'
     },
     'wizardshop': {
         'width': 20,
@@ -357,7 +357,7 @@ var level = {
             number: 0,
             type: []
         },
-        class: 'castle'
+        class: 'wizardshop'
     },
     'blacksmith': {
         'width': 20,
@@ -379,13 +379,13 @@ var level = {
 
         ],
         'doors': [
-            { position: 'not-random', level: 'outside', x: 5, y: 9, doorX: 38, doorY: 35 },
+            { position: 'not-random', level: 'outside', x: 3, y: 0, doorX: 41, doorY: 36 },
         ],
         'monsters': {
             number: 0,
             type: []
         },
-        class: 'castle'
+        class: 'blacksmith'
     },
     'tower_level_1': {
         'width': 20,
