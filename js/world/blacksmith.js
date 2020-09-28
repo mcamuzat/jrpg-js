@@ -14,7 +14,7 @@ class Blacksmith {
                 .lineTo(32 * 3 + 16, 32 * 5 + 16)
                 .lineTo(32 * 3 + 16, 32 * 4 + 16)
                 .lineTo(32 * 4 + 16, 32 * 3 + 16)
-        let smith = new Pnj(scene, path, 0, 0, 'dwarf-smith', 6);
+        let smith = new Npc(scene, path, 0, 0, 'dwarf-smith', 6);
             smith.startFollow({
                 positionOnPath: true,
                 duration: 3000,

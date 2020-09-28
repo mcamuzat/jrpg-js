@@ -22,7 +22,7 @@ class Outside {
             .Path(22 * 32 + 16, 35 * 32 + 16)
             .lineTo(22 * 32 + 16, 38 * 32 + 16)
             .lineTo(22 * 32 + 16, 35 * 32 + 16)
-        let soldat = new Pnj(scene, pathelf, 0, 0, 'soldier-elf', 6);
+        let soldat = new Npc(scene, pathelf, 0, 0, 'soldier-elf', 6);
         soldat.startFollow({
             positionOnPath: true,
             duration: 3000,
@@ -38,7 +38,7 @@ class Outside {
             .Path(45 * 32 + 16, 32 * 32 + 16)
             .lineTo(47 * 32 + 16, 32 * 32 + 16)
             .lineTo(45 * 32 + 16, 32 * 32 + 16)
-        let soldatBridge = new Pnj(scene, pathelf2, 0, 0, 'soldier-elf', 6);
+        let soldatBridge = new Npc(scene, pathelf2, 0, 0, 'soldier-elf', 6);
         soldatBridge.startFollow({
             positionOnPath: true,
             duration: 3000,
@@ -53,7 +53,7 @@ class Outside {
             .Path(3 * 32 + 16, 32 * 23 + 16)
             .lineTo(3 * 32 + 16, 32 * 24 + 16)
             .lineTo(3 * 32 + 16, 32 * 23 + 16)
-        let elfTrader = new Pnj(scene, pathElfTrader, 0, 0, 'elf-trader', 6);
+        let elfTrader = new Npc(scene, pathElfTrader, 0, 0, 'elf-trader', 6);
         elfTrader.startFollow({
             positionOnPath: true,
             duration: 2000,
@@ -72,7 +72,7 @@ class Outside {
             .Path(32 * 44 + 16, 32 * 13 + 16)
             .lineTo(32 * 46 + 16, 32 * 13 + 16)
             .lineTo(32 * 44 + 16, 32 * 13 + 16)
-        let arabTrader = new Pnj(scene, pathArabTrader, 0, 0, 'arab-trader', 6);
+        let arabTrader = new Npc(scene, pathArabTrader, 0, 0, 'arab-trader', 6);
         arabTrader.startFollow({
             positionOnPath: true,
             duration: 2000,

@@ -9,7 +9,7 @@ class Library {
             .lineTo(32 * 4 + 16, 32 * 3 + 16)
             .lineTo(32 * 4 + 16, 32 * 1 + 16)
             .lineTo(32 * 1 + 16, 32 * 1 + 16);
-        let elf1 = new Pnj(scene, path1, 0, 0, 'elf-monk', 6);
+        let elf1 = new Npc(scene, path1, 0, 0, 'elf-monk', 6);
         elf1.startFollow({
             positionOnPath: true,
             duration: 3000,
@@ -25,7 +25,7 @@ class Library {
             .lineTo(32 * 8 + 16, 32 * 3 + 16)
             .lineTo(32 * 8 + 16, 32 * 1 + 16)
             .lineTo(32 * 5 + 16, 32 * 1 + 16);
-        let elf2 = new Pnj(scene, path2, 0, 0, 'elf-monk', 6);
+        let elf2 = new Npc(scene, path2, 0, 0, 'elf-monk', 6);
         elf2.startFollow({
             positionOnPath: true,
             duration: 3000,
@@ -39,7 +39,7 @@ class Library {
             .lineTo(32 * 8 + 16, 32 * 6 + 16)
             .lineTo(32 * 1 + 16, 32 * 6 + 16)
             .lineTo(32 * 1 + 16, 32 * 4 + 16);
-        let elf3 = new Pnj(scene, path3, 0, 0, 'elf-monk', 6);
+        let elf3 = new Npc(scene, path3, 0, 0, 'elf-monk', 6);
         elf3.startFollow({
             positionOnPath: true,
             duration: 6000,

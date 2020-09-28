@@ -3,7 +3,7 @@ class Level1 {
         this.scene = scene;
         this.engine = engine
         var path2 = new Phaser.Curves.Path(16, 16).lineTo(16, 64).lineTo(64,64).lineTo(64,16).lineTo(16,16);
-        let soldat = new Pnj(scene, path2, 0, 0, 'soldat',6);
+        let soldat = new Npc(scene, path2, 0, 0, 'soldat',6);
         soldat.startFollow({
             positionOnPath: true,
             duration: 3000,
