@@ -135,7 +135,7 @@ var EngineScene = new Phaser.Class({
             "hpmax"    : this.hpmax,
             "hp"       : this.hp,
             "xp"       : this.xp,
-            "xpfor"    : [],
+            "xpfor"    : this.xpfor,
             "money"    : this.money,
             "quests"   : this.quests,
             "inventory": this.inventory
@@ -150,7 +150,7 @@ var EngineScene = new Phaser.Class({
                 "hp"       : 10,
                 "xp"       : 0,
                 "levelxp"  : 0,
-                "xpfor"    : [],
+                "xpfor"    : {},
                 "money"    : 0,
                 "quests"   : [],
                 "inventory": []
@@ -163,6 +163,8 @@ var EngineScene = new Phaser.Class({
         this.money = jrpg.money;
         this.hp = jrpg.hp;
         this.quests = jrpg.quests;
+        this.hpmax = jrpg.hpmax;
+        this.xpfor = jrpg.xpfor
     },
     pickWord:function(vocabulary = 'hiraganawords') {
         switch (vocabulary) {
@@ -252,7 +254,7 @@ var EngineScene = new Phaser.Class({
     },
     isHit: function(damage){
         this.hp -= damage;
-        this.events.emits('changeHp')
+        this.events.emit('changeHp')
 
     },
     receiveMoney: function(amount) {
@@ -269,9 +271,13 @@ var EngineScene = new Phaser.Class({
     getHp: function(){
         return this.hp;
     },
+    getHpMax: function(){
+        return this.hpmax;
+    },
     restoreHp: function(){
         this.hp = this.hpmax;
-        this.events.emits('changeHp')
+        this.events.emit('changeHp')
+        this.saveGame();
     },
     getLevelClass: function()
     {
@@ -584,4 +590,47 @@ var EngineScene = new Phaser.Class({
     isPositionFree: function(x,y) {
         return (this.getCollisionMap().indexOf(this.plan[y][x]) !== -1) 
     },
+    choice: function(sample_size, demon_classe) {
+        let unbeaten = [];
+        let weightedDemonList = Dictionnary[demon_classe].map(
+            function(x) {
+                let [code, ] = x;
+                let w = (this.maxed(code)) ? 1:2;
+                return [x, w];
+            }.bind(this)
+        );
+        console.log(weightedDemonList);
+        console.log(this.weightedSample(weightedDemonList, 5));
+    },
+    choiceKanji: function(sample_size, demon_classe) {
+        let unbeaten = [];
+        let [demonClass, demons_limits] = demonClass;
+        let demonsUndefeated =  0;
+        let demons = Dictionnary[demonClass];
+
+    },
+    maxed: function(key) {
+        return this.xpfor[key]||0  == 3;
+    },
+    beat: function(key) {
+        const current = this.xpfor[key]||0;
+        const newXp = Math.min(current + 1, 3)
+        this.xpfor[key] = newXp
+    },
+    weightedSample: function(population, sampleSize) {
+        let balls = [];
+        let populationLength = population.length;
+        for (let i = 0; i < populationLength;i++) {
+            let [k,weight]= population[i]
+            for (let z = 0; z< weight; z++) {
+                balls.push(k);
+            }
+        }
+        let sample = [];
+        let ballLength = balls.length;
+        for (let i = 0; i < sampleSize;i++ ) {
+            let random = Math.floor((Math.random() * ballLength));
+            sample.push(balls[random]);
+        }
+    }
 });

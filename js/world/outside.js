@@ -64,7 +64,6 @@ class Outside {
 
         // Meadow
         if (!engine.isQuestComplete('broken_sword_complete')) {
-            console.log(engine.translateTile('broken sword'));
             let brokenSword = scene.physics.add.sprite(32 * 21 + 16, 32 * 56 + 16, 'angband', engine.translateTile('broken sword'));
             scene.physics.add.overlap(player, brokenSword, this.onMeetBrokenSword, false, this);
         }
@@ -89,6 +88,22 @@ class Outside {
         scene.addDecoration(63, 16, "skull");
         scene.addDecoration(65, 14, "skeleton 5");
         scene.addDecoration(61, 24, "skeleton 1");
+    
+        // desert heat
+        if (!engine.isQuestComplete('antiheat_potion_complete')) {
+            this.heat = scene.physics.add.group({ classType: Phaser.GameObjects.Zone });
+            // parameters are x, y, width, height
+            for (let x = 50; x < 70; x++) {
+                for (let y = 10; y < 30; y++) {
+                    let zone = new Phaser.GameObjects.Zone(scene, 32 * x +16, 32 * y + 16, 20,20);
+                    this.heat.add(zone);            
+                }
+            }
+            scene.physics.add.overlap(player, this.heat, this.onMeetHeat, false, this);
+        }
+
+
+        //engine.choice(5, 'hiraganawords');
 
     }
 
@@ -167,5 +182,16 @@ class Outside {
             );
         }
     }
+    onMeetHeat(player, zone) {
+        zone.destroy();
+        if (Math.random() < 0.25) {
+            this.engine.changeText("The heat is too strong.\n You lost 1 HP.");
+            this.engine.isHit(1);
+        } else {
+            this.engine.changeText("The heat is too strong.\n Maybe you should return already..");
+
+        }
+    }
+    
 }
 

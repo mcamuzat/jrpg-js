@@ -1,75 +1,19 @@
-var UIScene = new Phaser.Class({
-
-    Extends: Phaser.Scene,
-
-    initialize:
-
-    function UIScene ()
-    {
-        Phaser.Scene.call(this, { key: 'UIScene', active: true });
-    },
-
-    create: function ()
-    { 
-        var engine = this.scene.get('EngineScene');
-        engine.loadGame();
-        //  Our Text object to display the Score
-        var xp = this.add.text(330, 10, 'Xp: '+ engine.getXp(), { font: '12px Arial', fill: '#ffffff' });
-        var life = this.add.text(330, 20, 'life: '+ engine.getHp(), { font: '12px Arial', fill: '#ffffff' });
-        var money = this.add.text(330, 30, 'money: 0', { font: '12px Arial', fill: '#ffffff' });
-        var text = this.add.text(10, 330, "Welcome to the 日本語RPG", { font: '12px Arial', fill: '#ffffff', wordWrap:{width:480 } });
-        this.inventory = this.physics.add.group({ classType: Phaser.GameObjects.Sprite });
-        //  Listen for events from it
-        engine.events.on('addXp', function () {
-            xp.setText('Xp: ' + engine.getXp());
-        }, this);
-        //  Listen for events from it
-        engine.events.on('changeText', function (data) {
-             text.setText(data);
-        }, this);
-        engine.events.on('addMoney', function () {
-            money.setText('Money: '+ engine.money);
-       }, this);
-       engine.events.on('addItem', function () {
-          this.inventory.clear(true,true); 
-          let items = engine.getItems();
-          for (let i = 0; i < items.length; i++) {
-              let item = items[i];
-              let sprite = new Phaser.GameObjects.Sprite (this,350 + 32 * i + 16, 100 + 16,'angband', engine.translateTile(item));
-              this.inventory.add(sprite,true);
-          }
-       }, this);
-    }
-});
-
-// Base class for door 
-var Door = new Phaser.Class({
-    Extends: Phaser.GameObjects.Zone,
-    initialize:
-    function Door(scene, x, y, level, doorX = -1, doorY = -1) {
-        Phaser.GameObjects.Zone.call(this, scene, x, y, 16,16)
-        this.level = level;
-        this.doorX = doorX;
-        this.doorY = doorY;
-    }
-});
-
 class Monster extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame, quizz) {
-        super(scene,  x, y, texture , frame);
+        super(scene, x, y, texture, frame);
         this.quizz = quizz
     }
 };
 
 class Pnj extends Phaser.GameObjects.PathFollower {
     constructor(scene, path, x, y, texture, frame) {
-        super(scene, path, x, y, texture , frame);
+        super(scene, path, x, y, texture, frame);
         this.oldx = 0;
         this.oldy = 0;
         scene.add.existing(this);
-         //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
+        //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
         scene.anims.create({
-            key: 'left-'+texture,
+            key: 'left-' + texture,
             frames: scene.anims.generateFrameNumbers(texture, { frames: [9, 10, 11, 9] }),
             frameRate: 10,
             repeat: -1
@@ -77,41 +21,40 @@ class Pnj extends Phaser.GameObjects.PathFollower {
 
         // animation with key 'right'
         scene.anims.create({
-            key: 'right-'+texture,
+            key: 'right-' + texture,
             frames: scene.anims.generateFrameNumbers(texture, { frames: [3, 4, 5, 3] }),
             frameRate: 10,
             repeat: -1
         });
         scene.anims.create({
-            key: 'up-'+texture,
+            key: 'up-' + texture,
             frames: scene.anims.generateFrameNumbers(texture, { frames: [0, 1, 2, 0] }),
             frameRate: 10,
             repeat: -1
         });
         scene.anims.create({
-            key: 'down-'+texture,
+            key: 'down-' + texture,
             frames: scene.anims.generateFrameNumbers(texture, { frames: [6, 7, 8, 6] }),
             frameRate: 10,
             repeat: -1
         });
         this.textureName = texture;
     }
-    preUpdate() 
-    {
+    preUpdate() {
         super.preUpdate()
         let dx = this.x - this.oldx;
         let dy = this.y - this.oldy;
         if (dx > 0) {
-            this.anims.play('right-'+ this.textureName, true)
+            this.anims.play('right-' + this.textureName, true)
         }
-        if (dx < 0){
-            this.anims.play('left-'+ this.textureName, true);
+        if (dx < 0) {
+            this.anims.play('left-' + this.textureName, true);
         }
         if (dy > 0) {
-            this.anims.play('down-'+ this.textureName, true)
+            this.anims.play('down-' + this.textureName, true)
         }
-        if (dy < 0){
-            this.anims.play('up-'+ this.textureName, true);
+        if (dy < 0) {
+            this.anims.play('up-' + this.textureName, true);
         }
         this.oldx = this.x;
         this.oldy = this.y;
@@ -131,12 +74,14 @@ var WorldScene = new Phaser.Class({
     },
 
     create: function (input) {
+
         this.game.level = input.level;
         // create the map
         var map = this.make.tilemap({ key: 'map' });
         var engine = this.scene.get('EngineScene');
-        engine.loadGame();
         engine.generateMap(input.level);
+
+        engine.events.emit('addItem')
         var plan = engine.getMapAsArray();
         map = this.make.tilemap({ data: plan, tileWidth: 32, tileHeight: 32 });
         // first parameter is the name of the tilemap in tiled
@@ -178,33 +123,33 @@ var WorldScene = new Phaser.Class({
         // our player sprite created through the phycis system
         // place the player
         if (input.x == -1) {
-            var [x,y] = engine.getFreePosition();
-        } else{
-            var [x,y] = [input.x, input.y]
+            var [x, y] = engine.getFreePosition();
+        } else {
+            var [x, y] = [input.x, input.y]
         }
-        this.player = this.physics.add.sprite(32 * x + 16 , 32 * y +16, 'player', 6);
+        this.player = this.physics.add.sprite(32 * x + 16, 32 * y + 16, 'player', 6);
 
         // add doors
         this.doors = this.physics.add.group({ classType: Door });
         doors = engine.getDoors()
         for (let i = 0; i < doors.length; i++) {
             if (doors[i].position == 'random') {
-                let [x,y] = engine.getFreePosition();
-                var door = new Door(this, x, y,doors[i].level);
+                let [x, y] = engine.getFreePosition();
+                var door = new Door(this, x, y, doors[i].level);
             } else {
                 var door = new Door(
-                    this, 
-                    32 * doors[i].x + 16 ,
-                    32 * doors[i].y + 16 ,
+                    this,
+                    32 * doors[i].x + 16,
+                    32 * doors[i].y + 16,
                     doors[i].level,
                     doors[i].doorX,
                     doors[i].doorY,
-                     );   
+                );
             }
             this.doors.add(door);
         }
-       
-        this.physics.add.overlap(this.player, this.doors, this.onMeetDoor, false, this);  
+
+        this.physics.add.overlap(this.player, this.doors, this.onMeetDoor, false, this);
 
         // don't go out of the map
         this.physics.world.bounds.width = map.widthInPixels;
@@ -218,7 +163,7 @@ var WorldScene = new Phaser.Class({
 
         // limit camera to map
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.cameras.main.setSize(32*10,32*10);
+        this.cameras.main.setSize(32 * 10, 32 * 10);
         //this.cameras.main.setPosition();
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true; // avoid tile bleed
@@ -231,33 +176,33 @@ var WorldScene = new Phaser.Class({
         let monsters = engine.getMonsters();
         for (var i = 0; i < monsters.length; i++) {
             let monster = monsters[i];
-            let [xmin, xmax] = monster.rangeX; 
+            let [xmin, xmax] = monster.rangeX;
             let [ymin, ymax] = monster.rangeY;
             for (let x = xmin; x < xmax; x++) {
                 for (let y = ymin; y < ymax; y++) {
-                    if (engine.isPositionFree(x,y) && Math.random() < monster.probability) {
+                    if (engine.isPositionFree(x, y) && Math.random() < monster.probability) {
                         // choose a random sprite
                         let nbMonster = monster.type.length;
                         let quizz = monster.vocabulary;
                         //Pick a random number between the amount of words and 0
                         let randomMonster = Math.floor((Math.random() * nbMonster));
                         let tile = engine.translateTile(monster.type[randomMonster]);
-                        let sprite = new Monster(this,32 * x + 16, 32 * y + 16,'angband', tile, quizz);
-                        this.spawns.add(sprite,true);
+                        let sprite = new Monster(this, 32 * x + 16, 32 * y + 16, 'angband', tile, quizz);
+                        this.spawns.add(sprite, true);
                     }
-                } 
-            } 
+                }
+            }
         }
         // add collider
         this.physics.add.overlap(this.player, this.spawns, this.onMeetEnemy, false, this);
         // mode debug 
         var keyObj = this.input.keyboard.addKey('ONE');  // Get key object
-        keyObj.on('down', function(event) {
-            this.spawns.clear(true,true);
+        keyObj.on('down', function (event) {
+            this.spawns.clear(true, true);
         }.bind(this));
         let levelScene = engine.getLevelClass();
         levelScene.addScene(this, this.player, engine);
-        
+
 
     },
     onMeetEnemy: function (player, zone) {
@@ -275,14 +220,16 @@ var WorldScene = new Phaser.Class({
         this.registry.set('monsterType', zone.quizz)
         this.registry.set('tiles', zone.frame.name);
         this.scene.switch('BattleScene');
+        console.log(this.registry.get('GameOver'))
+
     },
     onMeetDoor: function (player, door) {
-        this.scene.restart({level: door.level, x:door.doorX, y:door.doorY});
+        this.scene.restart({ level: door.level, x: door.doorX, y: door.doorY });
         // we move the zone to some other location
     },
-    addDecoration: function(x,y, tiles) {
+    addDecoration: function (x, y, tiles) {
         let engine = this.scene.get('EngineScene');
-        this.physics.add.sprite(32 * x + 16 , 32 * y +16, 'angband',engine.translateTile(tiles));
+        this.physics.add.sprite(32 * x + 16, 32 * y + 16, 'angband', engine.translateTile(tiles));
     },
     update: function (time, delta) {
         this.player.body.setVelocity(0);

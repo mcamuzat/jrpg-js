@@ -159,7 +159,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ['hiraganawords', 'kanji', 'katakanawords']
+                vocabulary: ['hiraganawords']
             },
             {
                 probability: 0.05,
@@ -181,7 +181,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ['hiraganawords','kanji', 'katakanawords']
+                vocabulary: ['hiraganawords']
             },
             {
                 probability: 0.1,
@@ -199,6 +199,79 @@ var level = {
                     "blue scoprion",
                     "brown scoprion",
                     "black scoprion",
+                ],
+                vocabulary: ['hiraganawords']
+            },
+            {
+                probability: 0.1,
+                rangeX: [50, 60],
+                rangeY: [10, 20],
+                type: [
+                    "red scoprion",
+                    "yellow scoprion",
+                    "gray scoprion",
+                    "blue scoprion",
+                    "brown scoprion",
+                    "black scoprion",
+                    "vulture 1",
+                    "vulture 2",
+                    "vulture 3",
+                ],
+                vocabulary: ['hiraganawords']
+            },
+            {
+                probability: 0.2,
+                rangeX: [50, 70],
+                rangeY: [20, 30],
+                type: [
+                    "red scoprion",
+                    "yellow scoprion",
+                    "gray scoprion",
+                    "blue scoprion",
+                    "brown scoprion",
+                    "black scoprion",
+                    "vulture 1",
+                    "vulture 2",
+                    "vulture 3",
+                ],
+                vocabulary: ['hiraganawords']
+            },
+            {
+                probability: 0.2,
+                rangeX: [60, 70],
+                rangeY: [10, 20],
+                type: [
+                    "red scoprion",
+                    "yellow scoprion",
+                    "gray scoprion",
+                    "blue scoprion",
+                    "brown scoprion",
+                    "black scoprion",
+                    "vulture 1",
+                    "vulture 2",
+                    "vulture 3",
+                ],
+                vocabulary: ['hiraganawords']
+            },
+            {
+                probability: 0.1,
+                rangeX: [20, 40],
+                rangeY: [10, 30],
+                type: [
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "green turtle",
+                    "red turtle",
+                    "black turtle",
+                    "brown turtle",
+                    "blue turtle",
+                    "yellow turtle",
                 ],
                 vocabulary: ['hiraganawords']
             },
@@ -279,7 +352,7 @@ var level = {
             "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
         ],
         'doors': [
-            { position: 'not-random', level: 'outside', x: 4, y: 9, doorX: 2, doorY: 37 },
+            { position: 'not-random', level: 'outside', x: 0, y: 7, doorX: 60, doorY: 37 },
         ],
         'monsters': [
             {

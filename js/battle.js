@@ -43,10 +43,11 @@ var BattleScene = new Phaser.Class({
     },
     nextTurn: function() {
         var engine = this.scene.get('EngineScene');
-        if(this.checkEndBattle()) {           
-            this.endBattle();
+        if(this.checkEndBattle()) {  
             engine.gainXp(1);
             engine.saveGame();
+            this.endBattle();
+            
         }
         var element = this.add.dom(200, 200).createFromCache('nameform');
         element.setPerspective(800);
@@ -54,13 +55,13 @@ var BattleScene = new Phaser.Class({
         element.on('keydown', function (event) {
             if (event.key === 'Enter' || event.keyCode === 13) {
                 var inputText = element.getChildByName('nameField');
-                console.log(this.enemies[this.indexMonster].furigana);
                 if(this.enemies[this.indexMonster].furigana.length > 0) {
                     inputText.value = wanakana.toHiragana(inputText.value);
                 }
                 if(this.enemies[this.indexMonster].answer.indexOf(inputText.value) !== -1) {
                     this.enemies[this.indexMonster].living = false;
                     this.enemies[this.indexMonster].destroy();
+                    engine.beat(this.enemies[this.indexMonster].question);
                     this.indexMonster++;
                     this.nextTurn();
                 } else {
@@ -68,23 +69,34 @@ var BattleScene = new Phaser.Class({
                     engine.changeText(this.enemies[this.indexMonster].help);
                     inputText.value = "";
                     engine.isHit(1);
+                    this.nextTurn();
                 }
             };
         },this);
     },     
     // check for game over or victory
-    checkEndBattle: function() {        
+    checkEndBattle: function() {
+        var engine = this.scene.get('EngineScene');        
         var victory = true;
         // if all enemies are dead we have victory
         for(var i = 0; i < this.enemies.length; i++) {
-            if(this.enemies[i].living)
+            if(this.enemies[i].living) {
                 victory = false;
+            }
         }
-       
+        if (engine.getHp() <= 0) {
+            victory = true;
+        }
+        console.log(victory, engine.getHp());
         return victory;
     },
     endBattle: function() {
+        var engine = this.scene.get('EngineScene');
+        if (engine.getHp() <= 0) {
+            this.scene.get('WorldScene').scene.restart({level: 'hospital', x:2, y:2});
+        } 
         this.scene.switch('WorldScene');
+        
     }
 });
 
