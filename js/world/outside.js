@@ -33,7 +33,6 @@ class Outside {
         scene.physics.world.enable(soldat);
 
         //Elven Bridge
-        // add the gard
         let pathelf2 = new Phaser.Curves
             .Path(45 * 32 + 16, 32 * 32 + 16)
             .lineTo(47 * 32 + 16, 32 * 32 + 16)
@@ -102,8 +101,7 @@ class Outside {
             scene.physics.add.overlap(player, this.heat, this.onMeetHeat, false, this);
         }
 
-
-        //engine.choice(5, 'hiraganawords');
+        console.log(engine.choices(3, [['kanji', 100]]));
 
     }
 

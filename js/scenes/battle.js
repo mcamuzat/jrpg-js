@@ -20,15 +20,19 @@ var BattleScene = new Phaser.Class({
     startBattle: function() {
         var engine = this.scene.get('EngineScene');
         var positions = [{x:50, y:50},{x:50, y:130},{x:50, y:200}];
+        var questions = engine.choices(3, this.registry.get('monsterType'));
+        console.log(questions);
         this.enemies = []; 
         for (let i = 0; i < positions.length; i++) {
-            let [question, answer, help, furigana] = engine.getQuestion(this.registry.get('monsterType'));
+
+            let [xpcode,question, answer, help, furigana] = engine.getQuestion(this.registry.get('monsterType'));
             this.enemies.push(new BadGuy(
                 this, 
                 positions[i].x, 
                 positions[i].y, 
                 "angband",
                 this.registry.get('tiles'),
+                xpcode,
                 question, 
                 answer,
                 help,
@@ -44,10 +48,7 @@ var BattleScene = new Phaser.Class({
     nextTurn: function() {
         var engine = this.scene.get('EngineScene');
         if(this.checkEndBattle()) {  
-            engine.gainXp(1);
-            engine.saveGame();
             this.endBattle();
-            
         }
         var element = this.add.dom(200, 200).createFromCache('nameform');
         element.setPerspective(800);
@@ -61,8 +62,9 @@ var BattleScene = new Phaser.Class({
                 if(this.enemies[this.indexMonster].answer.indexOf(inputText.value) !== -1) {
                     this.enemies[this.indexMonster].living = false;
                     this.enemies[this.indexMonster].destroy();
-                    engine.beat(this.enemies[this.indexMonster].question);
+                    engine.beat(this.enemies[this.indexMonster].xpcode);
                     this.indexMonster++;
+                    engine.gainXp(1);
                     this.nextTurn();
                 } else {
                     this.events.emit("Message", {text: this.enemies[this.indexMonster].help, delay:"3000"});
@@ -87,7 +89,6 @@ var BattleScene = new Phaser.Class({
         if (engine.getHp() <= 0) {
             victory = true;
         }
-        console.log(victory, engine.getHp());
         return victory;
     },
     endBattle: function() {
@@ -101,8 +102,9 @@ var BattleScene = new Phaser.Class({
 });
 
 class BadGuy extends Phaser.GameObjects.Sprite {
-    constructor(scene, x, y, texture, frame, question, answer, help, furigana = []) {
+    constructor(scene, x, y, texture, frame, xpcode, question, answer, help, furigana = []) {
         super(scene, x, y, texture, frame);
+        this.xpcode = xpcode;
         this.answer = answer;
         this.question = question;
         this.help = help;

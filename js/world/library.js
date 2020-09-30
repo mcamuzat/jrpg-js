@@ -32,7 +32,7 @@ class Library {
             repeat: -1,
         });
         scene.physics.add.overlap(player, elf2, this.onMeetElf2, false, this);
-        //scene.physics.world.enable(elf2);
+        scene.physics.world.enable(elf2);
         let path3 = new Phaser.Curves
             .Path(32 * 1 + 16, 32 * 4 + 16)
             .lineTo(32 * 8 + 16, 32 * 4 + 16)

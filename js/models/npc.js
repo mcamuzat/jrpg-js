@@ -1,10 +1,10 @@
-class  Npc extends Phaser.GameObjects.PathFollower {
+class Npc extends Phaser.GameObjects.PathFollower {
     constructor(scene, path, x, y, texture, frame) {
         super(scene, path, x, y, texture, frame);
         this.oldx = 0;
         this.oldy = 0;
         scene.add.existing(this);
-        //  animation with key 'left', we don't need left and right as we will use one and flip the sprite
+
         scene.anims.create({
             key: 'left-' + texture,
             frames: scene.anims.generateFrameNumbers(texture, { frames: [9, 10, 11, 9] }),

@@ -29,7 +29,7 @@ class Hospital {
             this.healedToday = true
         } 
             if (!this.healedToday) {
-                this.engine.changeText("Come here if you're hurt.\n he hospital can cure your wounds.");
+                this.engine.changeText("Come here if you're hurt.\n The hospital can cure your wounds.");
             }
         
      
