@@ -100,6 +100,7 @@ var EngineScene = new Phaser.Class({
             "hp"       : this.hp,
             "xp"       : this.xp,
             "xpfor"    : this.xpfor,
+            "levelxp"  : this.levelxp,
             "money"    : this.money,
             "quests"   : this.quests,
             "inventory": this.inventory
@@ -129,57 +130,6 @@ var EngineScene = new Phaser.Class({
         this.quests = jrpg.quests;
         this.hpmax = jrpg.hpmax;
         this.xpfor = jrpg.xpfor
-    },
-    pickWord:function(vocabulary = 'hiraganawords') {
-        switch (vocabulary) {
-            case 'meaning':
-                var dic = '';
-                for (let i = 0; i < 10; i++) {
-                    dic = dic + Dictionnary.chapter[i];
-                }
-
-                //Checking how many words ther are in the array
-                let lengthdic = dic.length;
-
-                //Pick a random number between the amount of words and 0
-                let randomKanji = Math.floor((Math.random() * lengthdic));
-
-                //Select a random word from the array
-                return [
-                    "meaning"+Dictionnary['kanjiReading'][randomKanji], 
-                    Dictionnary['kanji'][randomKanji], 
-                    Dictionnary['english'][randomKanji],
-                    Dictionnary['descriptions'][randomKanji],
-                    []
-                ];
-            case 'kanji':
-                //Checking how many words ther are in the array
-                let nbword = Dictionnary['readings'].length;
-                //Pick a random number between the amount of words and 0
-                let randomWord2 = Math.floor((Math.random() * nbword));
-                let [xpcode, kanji, reading, furigana, sub] = Dictionnary['readings'][randomWord2];
-                return [xpcode, kanji, reading, reading, furigana];
-            default:
-                //Checking how many words ther are in the array
-                let nbwords = Dictionnary[vocabulary].length;
-
-                //Pick a random number between the amount of words and 0
-                let randomWord = Math.floor((Math.random() * nbwords));
-
-                //Select a random word from the array
-                let [hiragana, english] =  Dictionnary[vocabulary][randomWord];
-
-                return [hiragana, hiragana, english, english, []];
-                
-        }
-       
-    },
-    getQuestion:function(choices) {
-        let nbword = choices.length;
-        //Pick a random number between the amount of words and 0
-        let randomWord = Math.floor((Math.random() * nbword));
-        
-        return this.pickWord(choices[randomWord]);
     },
     gainItem: function(item) {
         this.inventory.push(item);
@@ -212,6 +162,15 @@ var EngineScene = new Phaser.Class({
     },
     gainXp: function(xp){
         this.xp += xp;
+        let new_level = this.levelxp + 1;
+        let next_level_xp_req = new_level * (95 + new_level * 5);
+        while (this.xp >= next_level_xp_req) {
+            this.levelxp = this.levelxp + 1;
+            this.hpmax = this.hpmax + 1;
+            this.hp    = this.hp + 1;
+            new_level  = this.level + 1;
+            next_level_xp_req = new_level * (95 + new_level * 5);
+        }
         this.events.emit('addXp',xp);
     },
     changeText: function(text){
@@ -289,7 +248,7 @@ var EngineScene = new Phaser.Class({
             function(x) {
                 let [code, ] = x;
                 let w = (this.maxed(code)) ? 1:2;
-                return [x, w];
+                return [[demonClass, x], w];
             }.bind(this)
         );
     },
@@ -302,17 +261,17 @@ var EngineScene = new Phaser.Class({
         let weightedDemonList = [];
         for(let i = 0; i < demonsLength; i++) {
             let demon = demons[i];
-            let [xpcode, , , , sub] = demon;
+            let [xpcode, , , , sub, ] = demon;
             if (this.maxed(xpcode)){
-                if (sub != -1) {    
-                    let [xpsub, , , , ] = demons[sub];
+                if (sub != -1) {   
+                    let [xpsub, , , , , ] = demons[sub];
                     if(this.beaten(xpsub)) {
                         continue;
                     }
                 }
-                weightedDemonList.push([demon, 1])
+                weightedDemonList.push([[demonClasse,demon], 1])
             } else if (this.beaten(xpcode)){
-                weightedDemonList.push([demon, 2])
+                weightedDemonList.push([[demonClasse,demon], 2])
             } else {
                 unbeaten.push(demon);
                 demonsUndefeated++;
@@ -324,9 +283,8 @@ var EngineScene = new Phaser.Class({
         for(let i = 0, len = unbeaten.length ; i < len; i++ ) {
             let demon = unbeaten[i];
             w = Math.floor(8 - (8-1)*i / unbeaten.length);
-            weightedDemonList.push([demon, w])
+            weightedDemonList.push([[demonClasse,demon], w])
         }
-        console.log(weightedDemonList);
 
         return weightedDemonList;
     },
@@ -364,9 +322,17 @@ var EngineScene = new Phaser.Class({
         }
         let sample = [];
         let ballLength = balls.length;
-        for (let i = 0; i < sampleSize;i++ ) {
-            let random = Math.floor((Math.random() * ballLength));
-            sample.push(balls[random]);
+        let loop = 0;
+        while (true && loop <10) {
+            for (let i = 0; i < sampleSize; i++) {
+                let random = Math.floor((Math.random() * ballLength));
+                sample.push(balls[random]);
+            }
+            let unique = [...new Set(sample)];
+            if (unique.length === sample.length) {
+                break;
+            } 
+            loop++;
         }
         return sample;
     }

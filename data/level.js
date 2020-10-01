@@ -160,7 +160,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: [['kanji', 100]]
             },
             {
                 probability: 0.05,
@@ -182,7 +182,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: [['kanji', 100]]
             },
             {
                 probability: 0.1,
@@ -380,6 +380,56 @@ var level = {
             type: []
         },
         class: 'library'
+    },
+        'cave': {
+        'width': 20,
+        'height': 12,
+        'type': 'katakanawords',
+        'map': 'Jrpg',
+        'collision': [0, 5],
+        'plan': [
+            "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+            "SS,SSS,S,,,,,,,,,SS,,,,S,,,,SS",
+            "S,,S,,SSS,,,,,S,,,S,,,,S,,,,,S",
+            "S,SS,,,,S,,,,SS,,,SS,,,S,,,,SS",
+            "S,,S,SS,SSSSSS,,,,,S,,,,,SS,SS",
+            "S,,SS,S,,,,SS,,,,,,,,SSS,,S,SS",
+            "S,,,SSS,,,,,SS,,,SSSS,,SSSSSSS",
+            ">,,,,SS,,,,,,SS,,S,,,,,,,,,,SS",
+            "S,,,,S,,,S,S,,SS,,,,SSS,,,,,SS",
+            "SS,,,S,,,SSS,,,SSS,,,,SSS,,,SS",
+            "SS,,,,,,,,,SSS,,,S,,,,S,SS,,SS",
+            "SS,,,S,,,,,S,,,,,SSS,,,,,S,,,S",
+            "S,,,,S,,,,,S,,,,,,,,,,,,,SS,,S",
+            "SS,,,S,,,,SS,,,,SSS,,,,,SSSSSS",
+            "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+        ],
+        'doors': [
+            { position: 'not-random', level: 'outside', x: 0, y: 7, doorX: 60, doorY: 37 },
+        ],
+        'monsters': [
+            {
+                probability: 0.2,
+                rangeX: [2, 29],
+                rangeY: [2, 14],
+                type: [
+                    "bat 1",
+                    "bat 2",
+                    "bat 3",
+                    "bat 4",
+                    "bat 5",
+                    "skeleton 1",
+                    "skeleton 2",
+                    "skeleton 3",
+                    "skeleton 4",
+                    "skeleton 5",
+                    "skeleton 6",
+                    "skeleton 7",
+                ],
+                vocabulary: ['hiraganawords']
+            },
+        ],
+        class: 'cave'
     },
     'wizardshop': {
         'width': 20,

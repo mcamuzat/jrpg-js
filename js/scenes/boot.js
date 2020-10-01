@@ -32,6 +32,6 @@ var BootScene = new Phaser.Class({
 
     create: function () {
         // start the WorldScene
-        this.scene.start('WorldScene',{level: 'outside', x:15, y:15});
+        this.scene.start('WorldScene',{level: 'outside', x:14, y:25});
     }
 });

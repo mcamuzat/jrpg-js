@@ -100,9 +100,6 @@ class Outside {
             }
             scene.physics.add.overlap(player, this.heat, this.onMeetHeat, false, this);
         }
-
-        console.log(engine.choices(3, [['kanji', 100]]));
-
     }
 
     onMeetSoldat(player, soldat) {
