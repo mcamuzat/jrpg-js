@@ -230,6 +230,12 @@ var EngineScene = new Phaser.Class({
                 return new IcyMountains();
             case 'sanctuary':
                 return new AngelSanctuary();
+            case 'dungeonLevel1':
+                return new dungeonLevel1();
+            case 'dungeonLevel2':
+                return new dungeonLevel2();
+            case 'dungeonLevel3':
+                return new dungeonLevel3();
             default:
                 console.log(level[this.level].class)
         }
