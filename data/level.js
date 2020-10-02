@@ -13,7 +13,6 @@ var level = {
             number: 50,
             type: [1688, 1699]
         },
-        start_position: { position: 'random' },
         class: 'level1'
     },
     'level2': {
@@ -30,7 +29,6 @@ var level = {
             number: 5,
             type: [1688, 1699]
         },
-        start_position: { position: 'random' },
         class: 'level2'
     },
     'level3': {
@@ -63,11 +61,7 @@ var level = {
         class: 'level3'
     },
     'outside': {
-        'width': 70,
-        'height': 60,
-        'type': 'kanji',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "SSSS~~~~~~~~~~~~SSSS                                                  ",
             "S..SSSSSSSSSSSSSS..S                                                  ",
@@ -182,7 +176,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: [['kanji', 100]]
+                vocabulary: [['meaning', 100]]
             },
             {
                 probability: 0.1,
@@ -277,15 +271,10 @@ var level = {
                 vocabulary: ['hiraganawords']
             },
         ],
-        start_position: { position: 'not-random', x: 3, y: 1 },
         class: 'outside'
     },
     'hospital': {
-        'width': 20,
-        'height': 12,
-        'type': 'katakanawords',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "BBBBBBBBBB",
             "B...W....B",
@@ -331,11 +320,7 @@ var level = {
         class: 'castle'
     },
     'sanctuary': {
-        'width': 20,
-        'height': 12,
-        'type': 'katakanawords',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "BBB<BBBBBB",
             "B........B",
@@ -356,11 +341,7 @@ var level = {
         class: 'sanctuary'
     },
     'library': {
-        'width': 20,
-        'height': 12,
-        'type': 'katakanawords',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "BBBBBBBBBB",
             "B........B",
@@ -383,11 +364,7 @@ var level = {
         class: 'library'
     },
         'cave': {
-        'width': 20,
-        'height': 12,
-        'type': 'katakanawords',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
             "SS,SSS,S,,,,,,,,,SS,,,,S,,,,SS",
@@ -433,11 +410,7 @@ var level = {
         class: 'cave'
     },
     'wizardshop': {
-        'width': 20,
-        'height': 12,
-        'type': 'katakanawords',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "BBBBBBBBBB",
             "B........B",
@@ -460,11 +433,7 @@ var level = {
         class: 'wizardshop'
     },
     'blacksmith': {
-        'width': 20,
-        'height': 12,
-        'type': 'katakanawords',
         'map': 'Jrpg',
-        'collision': [0, 5],
         'plan': [
             "BBB<BBBBBB",
             "B........B",

@@ -3,7 +3,6 @@ class BadGuy extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture, frame);
         let [type, input] = question;
         this.type = type;
-        
         switch (this.type) {
             case 'kanji':
             let [xpcode, kanji, reading, furigana, sub, decl] = input;
@@ -12,7 +11,7 @@ class BadGuy extends Phaser.GameObjects.Sprite {
                 this.help = reading;
                 this.question = kanji;
                 this.furigana = furigana;
-                // it's a verb, le decline it 
+                // it's a verb, let decline it 
                 if (decl) {
                     let ending = this.finalize(decl);
                     this.answer = this.answer.map((x) => x + ending);
@@ -20,6 +19,14 @@ class BadGuy extends Phaser.GameObjects.Sprite {
                     this.question = this.question + ending; 
                     this.furigana.push([ending, null, false]);
                 }
+                break;
+            case 'meaning':
+                let [symbol, meanings] = input;
+                this.xpcode = 'meaning'+ symbol;
+                this.answer = meanings;
+                this.help = meanings;
+                this.question = symbol + '(meaning)';
+                this.furigana = [];
                 break;
             default:
                 let [kana, readings] = input;
@@ -32,7 +39,7 @@ class BadGuy extends Phaser.GameObjects.Sprite {
         }
         // have we already see the kanji
         this.fresh = !engine.beaten(this.xpcode);
-       
+        this.selected = false;
         this.words = [];
         if (this.furigana.length === 0) {
             let text = scene.add.text(x , y + 15, this.question, { color: 'white', fontSize: '45px'});
@@ -42,22 +49,23 @@ class BadGuy extends Phaser.GameObjects.Sprite {
             }
             this.words.push(text);
         } else {
-            this.furigana.map((value, index) => {
-            
-                let [base,furi,keep_furi] = value;
+            for (let i=0, index = 0; i<this.furigana.length;i++) {
+                let [base,furi,keep_furi] = this.furigana[i];
                 let text = scene.add.text(x + index * 45 ,y + 15 , base, { color: "#ffffff", align: "center", fontSize: '45px'});
                 if (furi && (keep_furi || this.fresh)) {
-                let furigana = scene.add.text(x + index * 45 + 15, y , furi, { color: "#ffffff", align: "center", fontSize: '10px'});
-
-                this.words.push(furigana);
+                    let furigana = scene.add.text(x + index * 45 + 15, y , furi, { color: "#ffffff", align: "center", fontSize: '10px'});
+                    this.words.push(furigana);
                 }
+                index +=base.length;
                 this.words.push(text);
-            });
+            }
         }
+    
         this.living = true;
 
         scene.add.existing(this);
     }
+    
     destroy()
     {
         this.words.map(x => x.destroy());

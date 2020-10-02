@@ -48,14 +48,17 @@ var BattleScene = new Phaser.Class({
         element.setPerspective(800);
         element.addListener('keydown').getChildByName('nameField').focus();
         element.on('keydown', function (event) {
+            // why the spacebar is not captured by the textfield
+            if (event.key === ' ') {
+                var inputText = element.getChildByName('nameField');
+                inputText.value += " ";
+            };
             if (event.key === 'Enter' || event.keyCode === 13) {
                 var inputText = element.getChildByName('nameField');
                 if(this.enemies[this.indexMonster].type == 'kanji') {
                     inputText.value = wanakana.toHiragana(inputText.value);
                 }
-                console.log(this.enemies[this.indexMonster].answer);
-                console.log(inputText.value);
-                if(this.enemies[this.indexMonster].answer.indexOf(inputText.value) !== -1) {
+                if(this.enemies[this.indexMonster].answer.indexOf(inputText.value.toLowerCase()) !== -1) {
                     this.enemies[this.indexMonster].living = false;
                     this.enemies[this.indexMonster].destroy();
                     engine.beat(this.enemies[this.indexMonster].xpcode);

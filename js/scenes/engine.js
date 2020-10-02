@@ -258,7 +258,7 @@ var EngineScene = new Phaser.Class({
             }.bind(this)
         );
     },
-    choiceKanji: function(demonClass) {
+    choiceKanji: function(demonClass, func) {
         let unbeaten = [];
         let [demonClasse, demonsLimit] = demonClass;
         let demonsUndefeated =  0;
@@ -267,10 +267,10 @@ var EngineScene = new Phaser.Class({
         let weightedDemonList = [];
         for(let i = 0; i < demonsLength; i++) {
             let demon = demons[i];
-            let [xpcode, , , , sub, ] = demon;
+            let [xpcode, sub] = func(demon);
             if (this.maxed(xpcode)){
                 if (sub != -1) {   
-                    let [xpsub, , , , , ] = demons[sub];
+                    let [xpsub, ] = func(demons[sub]);
                     if(this.beaten(xpsub)) {
                         continue;
                     }
@@ -294,12 +294,26 @@ var EngineScene = new Phaser.Class({
 
         return weightedDemonList;
     },
+    extractKanji: function(demon) {
+        let [xpcode, , , , sub, ] = demon;
+        return [xpcode, sub];
+    },
+    extractMeaning: function(demon) {
+        let [xpcode,] = demon
+        return ['meaning'+xpcode, -1]
+    },
     choices: function(sampleSize,demonClasses) {
         let weightedDemonList = [];
         for(let i = 0; i < demonClasses.length; i++) {
             let demonClass = demonClasses[i];
             if (Array.isArray(demonClass)) {
-                weightedDemonList = weightedDemonList.concat(this.choiceKanji(demonClass));
+                let [demonClasse, demonsLimit] = demonClass;
+                if (demonClass === 'kanji') {
+                    weightedDemonList = 
+                    weightedDemonList.concat(this.choiceKanji(demonClass, this.extractKanji));
+                } else {
+                    weightedDemonList = weightedDemonList.concat(this.choiceKanji(demonClass, this.extractMeaning))
+                }
             } else {
                 weightedDemonList = weightedDemonList.concat(this.choiceKana(demonClass));
             }
