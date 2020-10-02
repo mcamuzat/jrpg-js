@@ -2,6 +2,7 @@ class WizardShop {
     addScene(scene, player, engine) {
         this.scene = scene;
         this.engine = engine;
+        this.givenPotion = false;
         
         let path1 = new Phaser.Curves
             .Path(32 * 3 + 16, 32 * 4 + 16)
@@ -90,6 +91,34 @@ class WizardShop {
     choices(array) {
          let rand = Math.floor((Math.random() * array.length));
          return array[rand];
+    }
+    onMeetWizard () {
+        if (!this.engine.isQuestComplete("antiheat_potion_idea")) {
+            this.engine.changeText("I'm making potions from mushrooms.\n But you don't seem to need any.");
+        } else if (!(this.engine.isQuestComplete("antiheat_potion_yellow") && this.engine.isQuestComplete("antiheat_potion_bgreen")))
+        {
+            this.engine.completeQuest("antiheat_potion_recipe");
+            this.engine.changeText(
+                "Oh, you need an anti-heat potion\n"+
+                "Bring me some yellow and bright green mushrooms."
+            );
+
+        } else if (!this.engine.isQuestComplete("antiheat_potion_complete")) {
+            this.engine.removeItem("yellow mushroom");
+            this.engine.removeItem("green mushroom2");
+            this.engine.gainItem("potion 5");
+            this.engine.completeQuest('antiheat_potion_complete');
+            this.engine.changeText(
+                "Here's your potion.\nEnjoy the desert."
+            );
+            this.givenPotion = true;
+        } else if (!this.givenPotion) {
+            this.engine.changeText(
+                   "I'm making potions from mushrooms.\n"+
+                   "But you don't seem to need any more potions for now."
+            );
+        }
+
     }
     
 }

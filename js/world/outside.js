@@ -3,10 +3,15 @@ class Outside {
         this.scene = scene;
         this.engine = engine;
 
-        // debug castle open 
-        this.scene.map.putTileAt(32 + 128 * 26, 6, 16);
-        //this.engine.quests = ['elven_gate_tax']
-
+        if (this.engine.isQuestComplete('castle_gate_open')) {
+             this.scene.map.putTileAt(32 + 128 * 26, 6, 16);
+        } else {
+            this.zone = scene.physics.add.group({ classType: Phaser.GameObjects.Zone });
+            let zone = new Phaser.GameObjects.Zone(scene, 32 * 6 +16, 32 * 17 + 16, 20,20);
+            this.zone.add(zone);            
+            scene.physics.add.overlap(player, this.zone, this.onMeetCastleGate, false, this);
+        }
+       
         // elven tax
         if (this.engine.isQuestComplete('elven_gate_tax')) {
             this.scene.map.putTileAt(32 + 128 * 26, 23, 36);
@@ -100,8 +105,58 @@ class Outside {
             }
             scene.physics.add.overlap(player, this.heat, this.onMeetHeat, false, this);
         }
-    }
+        let mushroomDecoration = [
+            "black mushroom",
+            "white mushroom",
+            "gray mushroom",
+            "orange mushroom",
+            "red mushroom",
+            "green mushroom",
+            "blue mushroom",
+            "Dbrown mushroom",
+            "black mushroom 2",
+            "gray mushroom 2",
+            "violet mushroom",
+            "yellow mushroom",
+            "red mushroom 2",
+            "green mushroom 2",
+            "cyan mushroom",
+            "Lbrown mushroom",
+        ]
+        // mushrooms
+        let positions = engine.randomClearTiles(0.1, 20 ,40, 10,30);
+        for (let i = 0; i < positions.length; i++) {
+            let [x,y] = positions[i];
+            let mushroom = this.choices(mushroomDecoration);
+            if (engine.isQuestComplete('antiheat_potion_recipe')) {
+                if ((mushroom == "yellow mushroom") && !engine.isQuestComplete('antiheat_potion_yellow')) {
+                    let yellowMushroom = scene.physics.add.sprite(32 * x + 16, 32 * y + 16, 'angband', engine.translateTile(mushroom));
+                    scene.physics.add.overlap(player, yellowMushroom, this.onMeetYellowMushroom, false, this);
+                }
+                if ((mushroom == "green mushroom 2") && !engine.isQuestComplete('antiheat_potion_bgreen')) {
+                    console.log('hahioioio');
+                    let greenMushroom = scene.physics.add.sprite(32 * x + 16, 32 * y + 16, 'angband', engine.translateTile(mushroom));
+                    scene.physics.add.overlap(player, greenMushroom, this.onMeetGreenMushroom, false, this);
+                } else {
+                    scene.addDecoration(x, y, mushroom);
+                }
+            } else {
+                scene.addDecoration(x, y, mushroom);
+            }
+        }
+        
+       //  desert quest
+        if (!engine.isQuestComplete("desert artifact")) {
+            let book = scene.physics.add.sprite(32 * 61 + 16, 32 * 11 + 16, 'angband', engine.translateTile('spellbook blue 9'));
+            scene.physics.add.overlap(player, book, this.onMeetBook, false, this);
+        }
 
+    }
+    choices(array) {
+        let rand = Math.floor((Math.random() * array.length));
+        return array[rand];
+   }
+   
     onMeetSoldat(player, soldat) {
         this.collider.active = false;
 
@@ -143,6 +198,7 @@ class Outside {
                 this.colliderBridge.active = true;
             }.bind(this), 1000);
     }
+    
     onMeetCoin(player, coin) {
         this.engine.receiveMoney(1);
         coin.destroy()
@@ -152,7 +208,6 @@ class Outside {
         this.engine.gainItem("broken sword");
         this.engine.completeQuest("broken_sword_complete");
         sword.destroy();
-
     }
 
     onMeetElfTrader(player, sword) {
@@ -166,8 +221,8 @@ class Outside {
         if (this.engine.isQuestComplete('antiheat potion complete')) {
             this.engine.changeText("So you've drunk the potion.\n You may go to the desert now.");
         } else {
-            if (!this.engine.isQuestComplete('antiheat potion idea')) {
-                this.engine.completeQuest('antiheat potion idea')
+            if (!this.engine.isQuestComplete('antiheat_potion_idea')) {
+                this.engine.completeQuest('antiheat_potion_idea')
             }
             this.engine.changeText(
                 "The desert east of here is so hot.\n" +
@@ -187,6 +242,50 @@ class Outside {
 
         }
     }
+    onMeetYellowMushroom(player, mushroom) {
+        if (!this.engine.isQuestComplete("antiheat_potion_yellow")) {
+            this.engine.gainItem("yellow mushroom");
+            this.engine.completeQuest("antiheat_potion_yellow");
+            this.engine.changeText("You've got yellow mushrooms.\n"+
+                "You need yellow and bright green mushrooms for the potion.");
+
+            mushroom.destroy();
+        }
+    }
+    onMeetGreenMushroom(player, mushroom) {
+        if (!this.engine.isQuestComplete("antiheat_potion_bgreen")) {
+            this.engine.gainItem("green mushroom 2");
+            this.engine.completeQuest("antiheat_potion_bgreen");
+            this.engine.changeText("You've got yellow mushrooms.\n"+
+                "You need yellow and bright green mushrooms for the potion.");
+            mushroom.destroy();
+        };
+    }
+
+    onMeetBook(player, book) {
+        this.engine.changeText("You've got a spellbook.");
+        this.engine.gainItem("spellbook blue 9");
+        this.engine.completeQuest("desert_artifact");
+        book.destroy();
+
+    }
     
+    onMeetCastleGate(player, zone) {
+        if (this.engine.isQuestComplete("castle_gate_open")) {
+            return;
+        }
+        if (this.engine.isQuestComplete("desert_artifact") && this.engine.isQuestComplete("magic_sword_complete")) {
+            this.engine.changeText("Oh, you're a hero. Please come in.");
+            this.scene.map.putTileAt(32 + 128 * 26, 6, 16);
+            this.engine.completeQuest("castle_gate_open");
+
+        } else {
+            this.engine.changeText(
+                    "We're looking for a hero to face kanji monsters.\n"+
+                    "But too many brave souls failed already.\n"+
+                    "Come back once you get a magic sword and  spellbook\n"
+            );
+        }
+    }
 }
 

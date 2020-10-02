@@ -335,5 +335,16 @@ var EngineScene = new Phaser.Class({
             loop++;
         }
         return sample;
+    },
+    randomClearTiles:function(probability, xmin, xmax, ymin, ymax) {
+        let result = [];
+        for (let x = xmin; x < xmax; x++) {
+            for (let y = ymin; y < ymax; y++) {
+                if (this.isPositionFree(x, y) && Math.random() < probability) {
+                    result.push([x,y]);
+                }
+            }
+        }
+        return result;
     }
 });

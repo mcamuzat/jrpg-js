@@ -25,6 +25,8 @@ var BootScene = new Phaser.Class({
         this.load.spritesheet('arab-trader', 'assets/arab-trader.png', { frameWidth: 24, frameHeight: 32 });
         this.load.spritesheet('nurse', 'assets/nurse.png', { frameWidth: 24, frameHeight: 32 });
         this.load.spritesheet('wizard-gray', 'assets/wizard-gray.png', { frameWidth: 24, frameHeight: 32 });
+        this.load.spritesheet('angel-blue', 'assets/angel-blue.png', { frameWidth: 24, frameHeight: 32 });
+        this.load.spritesheet('king', 'assets/king.png', { frameWidth: 24, frameHeight: 32 });
         
         //
         this.load.spritesheet('angband', 'assets/map/angband.png', { frameWidth: 32, frameHeight: 32 });

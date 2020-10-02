@@ -3,6 +3,7 @@ class BadGuy extends Phaser.GameObjects.Sprite {
         super(scene, x, y, texture, frame);
         let [type, input] = question;
         this.type = type;
+        
         switch (this.type) {
             case 'kanji':
             let [xpcode, kanji, reading, furigana, sub, decl] = input;
@@ -31,9 +32,7 @@ class BadGuy extends Phaser.GameObjects.Sprite {
         }
         // have we already see the kanji
         this.fresh = !engine.beaten(this.xpcode);
-
-        console.log(this.fresh);
-        
+       
         this.words = [];
         if (this.furigana.length === 0) {
             let text = scene.add.text(x , y + 15, this.question, { color: 'white', fontSize: '45px'});
@@ -44,12 +43,16 @@ class BadGuy extends Phaser.GameObjects.Sprite {
             this.words.push(text);
         } else {
             this.furigana.map((value, index) => {
-                
-                let text = scene.add.text(x + index * 45 ,y + 15 , value[0], { color: "#ffffff", align: "center", fontSize: '45px'});
-                let furigana = scene.add.text(x + index * 45 + 15, y , value[1], { color: "#ffffff", align: "center", fontSize: '10px'});
-                this.words.push(text);
+            
+                let [base,furi,keep_furi] = value;
+                let text = scene.add.text(x + index * 45 ,y + 15 , base, { color: "#ffffff", align: "center", fontSize: '45px'});
+                if (furi && (keep_furi || this.fresh)) {
+                let furigana = scene.add.text(x + index * 45 + 15, y , furi, { color: "#ffffff", align: "center", fontSize: '10px'});
+
                 this.words.push(furigana);
-            })
+                }
+                this.words.push(text);
+            });
         }
         this.living = true;
 

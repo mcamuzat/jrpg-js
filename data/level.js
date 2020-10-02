@@ -325,6 +325,7 @@ var level = {
         'doors': [
             { position: 'not-random', level: 'outside', x: 4, y: 9, doorX: 7, doorY: 9 },
             { position: 'not-random', level: 'tower_level_1', x: 16, y: 0, doorX: 2, doorY: 1 },
+            { position: 'not-random', level: 'dungeonLevel1', x: 13, y: 0, doorX: 14, doorY: 1 },
         ],
         'monsters': [],
         class: 'castle'
@@ -730,7 +731,8 @@ var level = {
             "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
         ],
         'doors': [
-            { position: 'not-random', level: 'tower_level_3', x: 15, y: 0, doorX: 4, doorY: 4 },
+            { position: 'not-random', level: 'castle', x: 15, y: 0, doorX: 12, doorY: 1 },
+            { position: 'not-random', level: 'dungeonLevel2', x: 35, y: 15, doorX: 15, doorY: 1 },
         ],
         'monsters': {
             number: 0,
@@ -787,7 +789,8 @@ var level = {
             "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
         ],
         'doors': [
-            { position: 'not-random', level: 'tower_level_3', x: 3, y: 3, doorX: 4, doorY: 4 },
+            { position: 'not-random', level: 'dungeonLevel1', x: 15, y: 0, doorX: 35, doorY: 12 },
+            { position: 'not-random', level: 'dungeonLevel3', x: 7, y: 24, doorX: 15, doorY: 1 },
         ],
         'monsters': {
             number: 0,
@@ -844,7 +847,7 @@ var level = {
             "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",
         ],
         'doors': [
-            { position: 'not-random', level: 'tower_level_3', x: 3, y: 3, doorX: 4, doorY: 4 },
+            { position: 'not-random', level: 'dungeonLevel2', x: 15, y: 0, doorX: 7, doorY: 23 },
         ],
         'monsters': {
             number: 0,
