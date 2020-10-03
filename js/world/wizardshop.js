@@ -105,7 +105,7 @@ class WizardShop {
 
         } else if (!this.engine.isQuestComplete("antiheat_potion_complete")) {
             this.engine.removeItem("yellow mushroom");
-            this.engine.removeItem("green mushroom2");
+            this.engine.removeItem("green mushroom 2");
             this.engine.gainItem("potion 5");
             this.engine.completeQuest('antiheat_potion_complete');
             this.engine.changeText(

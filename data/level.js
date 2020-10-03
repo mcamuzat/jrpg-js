@@ -176,7 +176,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: [['meaning', 100]]
+                vocabulary: [['kanji', 100]]
             },
             {
                 probability: 0.1,
@@ -404,7 +404,7 @@ var level = {
                     "skeleton 6",
                     "skeleton 7",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: [['kanji',100]]
             },
         ],
         class: 'cave'

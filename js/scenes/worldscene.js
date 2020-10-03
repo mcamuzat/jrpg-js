@@ -9,6 +9,7 @@ var WorldScene = new Phaser.Class({
         },
 
     preload: function () {
+        this.load.plugin('rexvirtualjoystickplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js', true);
     },
 
     create: function (input) {
@@ -106,7 +107,8 @@ var WorldScene = new Phaser.Class({
 
         // limit camera to map
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.cameras.main.setSize(32 * 10, 32 * 10);
+        this.cameras.main.setSize(32 * 16, 32 * 10);
+        this.cameras.main.setPosition(64,45);
         //this.cameras.main.setPosition();
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true; // avoid tile bleed
@@ -146,7 +148,8 @@ var WorldScene = new Phaser.Class({
         let levelScene = engine.getLevelClass();
         levelScene.addScene(this, this.player, engine);
 
-
+        this.joystick = this.plugins.get('rexvirtualjoystickplugin').add(this, {x:100, y:100});
+        this.cursorKeys = this.joystick.createCursorKeys();
     },
     onMeetEnemy: function (player, zone) {
         this.cameras.main.shake(300);
@@ -155,7 +158,10 @@ var WorldScene = new Phaser.Class({
         this.cursors.right.reset();
         this.cursors.up.reset();
         this.cursors.down.reset();
-
+        this.cursorKeys.left.reset();
+        this.cursorKeys.right.reset();
+        this.cursorKeys.up.reset();
+        this.cursorKeys.down.reset()
         // start battle 
         // switch to BattleScene
         this.registry.set('monsterType', zone.quizz)
@@ -175,30 +181,30 @@ var WorldScene = new Phaser.Class({
         this.player.body.setVelocity(0);
         let velocity = 300;
         // Horizontal movement
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown||this.cursorKeys.left.isDown) {
             this.player.body.setVelocityX(-velocity);
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.cursors.right.isDown||this.cursorKeys.right.isDown) {
             this.player.body.setVelocityX(velocity);
         }
         // Vertical movement
-        if (this.cursors.up.isDown) {
+        if (this.cursors.up.isDown||this.cursorKeys.up.isDown) {
             this.player.body.setVelocityY(-velocity);
         }
-        else if (this.cursors.down.isDown) {
+        else if (this.cursors.down.isDown||this.cursorKeys.down.isDown) {
             this.player.body.setVelocityY(velocity);
         }
         // Update the animation last and give left/right animations precedence over up/down animations
-        if (this.cursors.left.isDown) {
+        if (this.cursors.left.isDown||this.cursorKeys.left.isDown) {
             this.player.anims.play('left', true);
         }
-        else if (this.cursors.right.isDown) {
+        else if (this.cursors.right.isDown||this.cursorKeys.right.isDown) {
             this.player.anims.play('right', true);
         }
-        else if (this.cursors.up.isDown) {
+        else if (this.cursors.up.isDown||this.cursorKeys.up.isDown) {
             this.player.anims.play('up', true);
         }
-        else if (this.cursors.down.isDown) {
+        else if (this.cursors.down.isDown||this.cursorKeys.down.isDown) {
             this.player.anims.play('down', true);
         }
         else {

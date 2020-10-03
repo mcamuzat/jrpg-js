@@ -3,6 +3,7 @@ var EngineScene = new Phaser.Class({
     initialize:
         function BootScene() {
             Phaser.Scene.call(this, { key: 'EngineScene' });
+            this.log = [];
         },
     generateMap: function(input) {
         this.level = input
@@ -160,6 +161,9 @@ var EngineScene = new Phaser.Class({
     getXp: function(){
         return this.xp;
     },
+    getLevelXp: function(){
+        return this.levelxp;
+    },
     gainXp: function(xp){
         this.xp += xp;
         let new_level = this.levelxp + 1;
@@ -171,26 +175,30 @@ var EngineScene = new Phaser.Class({
             new_level  = this.level + 1;
             next_level_xp_req = new_level * (95 + new_level * 5);
         }
-        this.events.emit('addXp',xp);
+        this.events.emit('changeStat');
+    },
+    addText: function(text){
+        this.log.push(text);
+        this.events.emit('changeText', this.log.slice(-4))
     },
     changeText: function(text){
         this.events.emit('changeText',text);
     },
     isHit: function(damage){
         this.hp -= damage;
-        this.events.emit('changeHp')
+        this.events.emit('changeStat')
 
     },
     receiveMoney: function(amount) {
         this.money += amount;
-        this.events.emit('addMoney', this.money)
+        this.events.emit('changeStat');
     },
     hasMoney: function(amount) {
         return this.money >= amount;
     },
     takeMoney: function(amount) {
         this.money -= amount;
-        this.events.emit('addMoney', this.money);
+        this.events.emit('changeStat');
     },
     getHp: function(){
         return this.hp;
@@ -200,7 +208,7 @@ var EngineScene = new Phaser.Class({
     },
     restoreHp: function(){
         this.hp = this.hpmax;
-        this.events.emit('changeHp')
+        this.events.emit('changeStat')
         this.saveGame();
     },
     getLevelClass: function()
@@ -340,10 +348,10 @@ var EngineScene = new Phaser.Class({
                 balls.push(k);
             }
         }
-        let sample = [];
         let ballLength = balls.length;
-        let loop = 0;
-        while (true && loop <10) {
+
+        let sample = [];
+        while (true) {
             for (let i = 0; i < sampleSize; i++) {
                 let random = Math.floor((Math.random() * ballLength));
                 sample.push(balls[random]);
@@ -351,8 +359,8 @@ var EngineScene = new Phaser.Class({
             let unique = [...new Set(sample)];
             if (unique.length === sample.length) {
                 break;
-            } 
-            loop++;
+            }
+            sample = [];
         }
         return sample;
     },

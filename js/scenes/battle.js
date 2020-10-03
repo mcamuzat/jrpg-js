@@ -19,9 +19,10 @@ var BattleScene = new Phaser.Class({
     },
     startBattle: function() {
         var engine = this.scene.get('EngineScene');
-        var positions = [{x:50, y:50},{x:50, y:130},{x:50, y:200}];
+        var positions = [{x:50, y:70},{x:50, y:150},{x:50, y:230}];
         var questions = engine.choices(3, this.registry.get('monsterType'));
         this.enemies = []; 
+
         for (let i = 0; i < positions.length; i++) {
             this.enemies.push(new BadGuy(
                 this, 
@@ -44,7 +45,7 @@ var BattleScene = new Phaser.Class({
             this.endBattle();
             engine.saveGame();
         }
-        var element = this.add.dom(200, 200).createFromCache('nameform');
+        var element = this.add.dom(450, 300).createFromCache('nameform');
         element.setPerspective(800);
         element.addListener('keydown').getChildByName('nameField').focus();
         element.on('keydown', function (event) {
@@ -62,12 +63,17 @@ var BattleScene = new Phaser.Class({
                     this.enemies[this.indexMonster].living = false;
                     this.enemies[this.indexMonster].destroy();
                     engine.beat(this.enemies[this.indexMonster].xpcode);
+                    engine.addText("You slayed demon "+
+                        this.enemies[this.indexMonster].question+
+                        " ("+ this.enemies[this.indexMonster].answer.join(", ")+ ")");
                     this.indexMonster++;
                     engine.gainXp(1);
                     this.nextTurn();
                 } else {
                     this.events.emit("Message", {text: this.enemies[this.indexMonster].help, delay:"3000"});
-                    engine.changeText(this.enemies[this.indexMonster].help);
+                    engine.addText("demon "+
+                        this.enemies[this.indexMonster].question+
+                        " ("+ this.enemies[this.indexMonster].answer.join(", ")+ ") hit you !");
                     inputText.value = "";
                     engine.isHit(1);
                     this.nextTurn();

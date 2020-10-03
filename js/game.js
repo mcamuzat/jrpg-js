@@ -3,6 +3,10 @@ var config = {
     parent: 'content',
     width: 640,
     height: 480,
+    scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
     zoom: 1,
     pixelArt: true,
     physics: {
