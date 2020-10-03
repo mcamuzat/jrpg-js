@@ -176,7 +176,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: [['kanji', 100]]
+                vocabulary: ["kanawords", ["kanji",100]]
             },
             {
                 probability: 0.1,

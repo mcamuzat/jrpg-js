@@ -20,20 +20,43 @@ var BattleScene = new Phaser.Class({
     startBattle: function() {
         var engine = this.scene.get('EngineScene');
         var positions = [{x:50, y:70},{x:50, y:150},{x:50, y:230}];
+        var pointerPositions = [{x:15, y:70},{x:15, y:150},{x:15, y:230}];
         var questions = engine.choices(3, this.registry.get('monsterType'));
         this.enemies = []; 
-
+        this.pointers = [];
+        var paths = [
+            new Phaser.Curves.Path(50, 70).circleTo(Math.random()*10),
+            new Phaser.Curves.Path(50, 150).circleTo(Math.random()*10),
+            new Phaser.Curves.Path(50, 230).circleTo(Math.random()*10),
+        ];
         for (let i = 0; i < positions.length; i++) {
-            this.enemies.push(new BadGuy(
+            let monster = new AnimatedBadGuy(
                 this, 
+                paths[i],
                 positions[i].x, 
                 positions[i].y, 
                 'angband',
                 this.registry.get('tiles'),
                 questions[i],
                 engine
-            ));
+            );
+            monster.startFollow({
+                positionOnPath: true,
+                duration: Phaser.Math.Between(2000, 3000),
+                repeat: -1,
+                verticalAdjust: true
+            });
+            this.enemies.push(monster);
         }
+        for (let i = 0; i < pointerPositions.length; i++) {
+            let pointer = this.physics.add.sprite(pointerPositions[i].x, pointerPositions[i].y, 'angband', 169);
+            if (i !=0) {
+                pointer.visible = false;
+            }
+            this.pointers.push(pointer);
+        }
+        let player = this.physics.add.sprite(400, 200, 'player', 9);
+        player.setScale(2);
         this.indexMonster = 0;
         this.message = new Message(this, this.events);
         this.add.existing(this.message);
@@ -66,7 +89,11 @@ var BattleScene = new Phaser.Class({
                     engine.addText("You slayed demon "+
                         this.enemies[this.indexMonster].question+
                         " ("+ this.enemies[this.indexMonster].answer.join(", ")+ ")");
+                    this.pointers[this.indexMonster].visible = false;    
                     this.indexMonster++;
+                    if (this.pointers[this.indexMonster] !== undefined) {
+                        this.pointers[this.indexMonster].visible = true;
+                    }
                     engine.gainXp(1);
                     this.nextTurn();
                 } else {
@@ -75,6 +102,7 @@ var BattleScene = new Phaser.Class({
                         this.enemies[this.indexMonster].question+
                         " ("+ this.enemies[this.indexMonster].answer.join(", ")+ ") hit you !");
                     inputText.value = "";
+                    this.cameras.main.shake(300);
                     engine.isHit(1);
                     this.nextTurn();
                 }

@@ -150,7 +150,6 @@ class Outside {
             let book = scene.physics.add.sprite(32 * 61 + 16, 32 * 11 + 16, 'angband', engine.translateTile('spellbook blue 9'));
             scene.physics.add.overlap(player, book, this.onMeetBook, false, this);
         }
-
     }
     choices(array) {
         let rand = Math.floor((Math.random() * array.length));

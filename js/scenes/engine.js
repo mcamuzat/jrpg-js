@@ -316,7 +316,7 @@ var EngineScene = new Phaser.Class({
             let demonClass = demonClasses[i];
             if (Array.isArray(demonClass)) {
                 let [demonClasse, demonsLimit] = demonClass;
-                if (demonClass === 'kanji') {
+                if (demonClasse === 'kanji') {
                     weightedDemonList = 
                     weightedDemonList.concat(this.choiceKanji(demonClass, this.extractKanji));
                 } else {
@@ -374,5 +374,38 @@ var EngineScene = new Phaser.Class({
             }
         }
         return result;
-    }
+    },
+    getKanjiKnowledge:function() {
+        let kanjiStats = {};
+        for (let i=0, len = Dictionnary.kanji.length; i < len; i++) {
+            let demon = Dictionnary['kanji'][i];
+            let [xpcode, kanji,,,, ] = demon;
+            let xp = this.xpfor[xpcode]||0;
+            if (xp == 1 || xp ==2) {
+                xp +=1;
+            }
+            if (kanjiStats[kanji] == undefined) {
+                kanjiStats[kanji] = [xp,3];
+            } else {
+                kanjiStats[kanji][0] += xp;
+                kanjiStats[kanji][1] += 3;
+            }
+        }
+        let kanjiStatsFinal = [0, 0, 0, 0, 0]
+        for (const value in kanjiStats) {
+            let [a,b] = kanjiStats[value];
+            if (a == 0) {
+                kanjiStatsFinal[0]++;
+            } else if (a == b) {
+                kanjiStatsFinal[4]++;
+            } else if (4*a%b == 0) {
+                kanjiStatsFinal[1]++;
+            } else if (4*a%b == 1) {
+                kanjiStatsFinal[2]++;
+            } else {
+                kanjiStatsFinal[3]++;
+            }
+        }
+        return kanjiStatsFinal;
+    },
 });
