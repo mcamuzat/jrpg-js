@@ -16,7 +16,7 @@ class Hospital {
         let nurse = new Npc(scene, path2, 0, 0, 'nurse',6);
         nurse.startFollow({
             positionOnPath: true,
-            duration: 5000,
+            duration: 10000,
             repeat: -1,
         });
         scene.physics.world.enable(nurse);

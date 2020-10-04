@@ -166,7 +166,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: [['kanji', 100]]
+                vocabulary: ['hiraganawords']
             },
             {
                 probability: 0.05,
@@ -188,7 +188,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ["kanawords", ["kanji",100]]
+                vocabulary: ["hiraganawords"]
             },
             {
                 probability: 0.1,
@@ -207,7 +207,7 @@ var level = {
                     "brown scoprion",
                     "black scoprion",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: ['hiraganawords','katakanawords']
             },
             {
                 probability: 0.1,
@@ -224,7 +224,7 @@ var level = {
                     "vulture 2",
                     "vulture 3",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: ['kanawords', ['kanji', 100]]
             },
             {
                 probability: 0.2,
@@ -241,7 +241,7 @@ var level = {
                     "vulture 2",
                     "vulture 3",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: ['kanawords', ['kanji', 100]]
             },
             {
                 probability: 0.2,
@@ -258,7 +258,7 @@ var level = {
                     "vulture 2",
                     "vulture 3",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: ['kanawords', ['kanji', 100]]
             },
             {
                 probability: 0.1,
@@ -280,7 +280,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ['hiraganawords']
+                vocabulary: ['hiraganawords','katakanaword', 'kanawords']
             },
         ],
         class: 'outside'
@@ -416,7 +416,7 @@ var level = {
                     "skeleton 6",
                     "skeleton 7",
                 ],
-                vocabulary: [['kanji',100]]
+                vocabulary: ['kanawords', ['kanji',100]]
             },
         ],
         class: 'cave'
@@ -532,7 +532,7 @@ var level = {
                 vocabulary: [['kanji', 100]]
             }
         ],
-        class: 'castle'
+        class: 'default'
     },
     'tower_level_2': {
         'width': 20,
@@ -599,7 +599,7 @@ var level = {
             }
         ]
         ,
-        class: 'castle'
+        class: 'default'
     },
     'tower_level_3': {
         'width': 20,
@@ -657,10 +657,104 @@ var level = {
         'doors': [
             { position: 'not-random', level: 'tower_level_3', x: 3, y: 3, doorX: 4, doorY: 4 },
         ],
-        'monsters': {
-            number: 0,
-            type: [1688, 1699]
-        },
+        'monsters': [
+            {
+                probability: 0.2,
+                rangeX: [10, 20],
+                rangeY: [0, 10],
+                type: [
+                    "eagle 1",
+                    "eagle 1",
+                    "eagle 2",
+                    "eagle 2",
+                    "eagle 3",
+                    "eagle 3",
+                    "eagle 4",
+                    "eagle 4",
+                    "bear 1",
+                    "bear 1",
+                    "bear 2",
+                    "bear 2",
+                    "dog 3",
+                    "dog 3",
+                    "dog 4",
+                    "dog 4",
+                    "dog 5",
+                    "dog 5",
+                    "dragon tiny 3",
+                    "dragon tiny 3",
+                    "dragon small 3",
+                    "dragon small 3",
+                    "dragon normal 3",
+                    "dragon big 3",
+                ],
+                vocabulary: [['kanji', 300]]
+            },
+                        {
+                probability: 0.2,
+                rangeX: [0, 20],
+                rangeY: [10, 20],
+                type: [
+                    "eagle 1",
+                    "eagle 1",
+                    "eagle 2",
+                    "eagle 2",
+                    "eagle 3",
+                    "eagle 3",
+                    "eagle 4",
+                    "eagle 4",
+                    "bear 1",
+                    "bear 1",
+                    "bear 2",
+                    "bear 2",
+                    "dog 3",
+                    "dog 3",
+                    "dog 4",
+                    "dog 4",
+                    "dog 5",
+                    "dog 5",
+                    "dragon tiny 3",
+                    "dragon tiny 3",
+                    "dragon small 3",
+                    "dragon small 3",
+                    "dragon normal 3",
+                    "dragon big 3", 
+                ],
+                vocabulary: [['kanji', 300]]
+            },
+                        {
+                probability: 0.2,
+                rangeX: [20, 50],
+                rangeY: [0, 20],
+                type: [
+                       "eagle 1",
+                    "eagle 1",
+                    "eagle 2",
+                    "eagle 2",
+                    "eagle 3",
+                    "eagle 3",
+                    "eagle 4",
+                    "eagle 4",
+                    "bear 1",
+                    "bear 1",
+                    "bear 2",
+                    "bear 2",
+                    "dog 3",
+                    "dog 3",
+                    "dog 4",
+                    "dog 4",
+                    "dog 5",
+                    "dog 5",
+                    "dragon tiny 3",
+                    "dragon tiny 3",
+                    "dragon small 3",
+                    "dragon small 3",
+                    "dragon normal 3",
+                    "dragon big 3",
+                ],
+                vocabulary: [['kanji', 300]]
+            } 
+        ],
         class: 'icyMountains'
     },
     'dungeonLevel1': {

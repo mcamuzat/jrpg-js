@@ -242,7 +242,7 @@ var EngineScene = new Phaser.Class({
             case 'forest':
                 return new Forest();
             default:
-                console.log(level[this.level].class)
+                return new Default();
         }
     },
     translateTile: function (string) {

@@ -189,7 +189,7 @@ var WorldScene = new Phaser.Class({
     },
     update: function (time, delta) {
         this.player.body.setVelocity(0);
-        let velocity = 300;
+        let velocity = 100;
         // Horizontal movement
         if (this.cursors.left.isDown||this.cursorKeys.left.isDown) {
             this.player.body.setVelocityX(-velocity);
