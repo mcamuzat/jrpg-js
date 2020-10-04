@@ -18,7 +18,7 @@ var EngineScene = new Phaser.Class({
                     if (!plan[y]) {
                         plan[y] = [];
                     }
-                    plan[y][x] = v;
+                    plan[y][x] = (v) ? tiled[level[input].rogueWall]:tiled[level[input].rogueGround]  ;
                 });
 
                 break;
@@ -29,19 +29,17 @@ var EngineScene = new Phaser.Class({
                 var plan = level[input].plan;
                 plan = plan.map((x) => (x.split("").map((z) => tiled[z])));
                 break;
-            case 'Cellular':
-                var _map = new ROT.Map.Cellular(
+            case 'Forest':
+                var _map = new ROT.Map.Rogue(
                     level[input].width,
-                    level[input].height
+                    level[input].height,
                 ); 
-                _map.randomize(0.5);
-                for (var i=0; i<4; i++) _map.create();
                 var plan = []
                 _map.create(function (x, y, v) {
                     if (!plan[y]) {
                         plan[y] = [];
                     }
-                    plan[y][x] = v;
+                    plan[y][x] = (v) ? tiled[level[input].trees[Math.floor((Math.random() * 2))]] : tiled[level[input].rogueGround];
                 });
                 break;
             default:
@@ -66,7 +64,6 @@ var EngineScene = new Phaser.Class({
         return [x*32 + 16,y * 32 + 16]
     },
     getCollisionMap: function() {
-        if (level[this.level].map == 'Jrpg') {
             return [  9+ 128 * 23, 
                 12+ 128 * 23, 
                 93+ 128 * 23, 
@@ -80,8 +77,6 @@ var EngineScene = new Phaser.Class({
                 96+ 128 * 23, 
                 28+ 128 * 26, 
                 29+ 128 * 26]; 
-        }
-        return level[this.level]['collision']
     },
     getDoors: function() {
         return level[this.level].doors;
@@ -244,6 +239,8 @@ var EngineScene = new Phaser.Class({
                 return new dungeonLevel2();
             case 'dungeonLevel3':
                 return new dungeonLevel3();
+            case 'forest':
+                return new Forest();
             default:
                 console.log(level[this.level].class)
         }

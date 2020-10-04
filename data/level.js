@@ -2,63 +2,74 @@ var level = {
     'level1': {
         'width': 40,
         'height': 40,
-        'type': 'kanji',
         'map': 'Rogue',
-        'collision': [0, 5],
+        'rogueWall': 'B',
+        'rogueGround': '.',
         'doors': [
-            { position: 'random', level: 'level3' },
             { position: 'random', level: 'level2' }
         ],
-        'monsters': {
-            number: 50,
-            type: [1688, 1699]
-        },
+        'monsters': [
+               {
+                probability: 0.1,
+                rangeX: [0, 40],
+                rangeY: [0, 40],
+                type: [
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "green turtle",
+                    "red turtle",
+                    "black turtle",
+                    "brown turtle",
+                    "blue turtle",
+                    "yellow turtle",
+                ],
+                vocabulary: [['kanji', 100]]
+            },
+        ]
+           
+        ,
         class: 'level1'
     },
-    'level2': {
+    'forest': {
         'width': 40,
         'height': 40,
-        'type': 'katakanawords',
-        'map': 'Cellular',
-        'collision': [0],
+        'map': 'Forest',
+        'trees': ['T','t'],
+        'rogueGround': ' ',
         'doors': [
-            { position: 'random', level: 'level1' },
-            { position: 'random', level: 'level3' }
+            { position: 'random', level: 'outside', doorX:14, doorY:33 },
         ],
-        'monsters': {
-            number: 5,
-            type: [1688, 1699]
-        },
-        class: 'level2'
-    },
-    'level3': {
-        'width': 10,
-        'height': 9,
-        'type': 'katakanawords',
-        'map': 'Plan',
-        'collision': [0, 5],
-        'plan': [
-            [1, 1, 1, 5, 1, 1, 5, 1, 1, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 1, 1, 1, 1, 1, 1, 0, 1],
-            [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 0, 1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 0, 1, 0, 1, 0, 1],
-            [1, 0, 1, 0, 1, 0, 0, 1, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        'monsters': [
+            {
+                probability: 0.1,
+                rangeX: [0, 40],
+                rangeY: [0, 40],
+                type: [
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "white rat",
+                    "black rat",
+                    "brown rat",
+                    "red rat",
+                    "green turtle",
+                    "red turtle",
+                    "black turtle",
+                    "brown turtle",
+                    "blue turtle",
+                    "yellow turtle",
+                ],
+                vocabulary: [['meaning', 100]]
+            },
         ],
-        'doors': [
-            { position: 'not-random', level: 'level1', x: 3, y: 0 },
-            { position: 'not-random', level: 'level2', x: 6, y: 0 }
-        ],
-        'monsters': {
-            number: 0,
-            type: [1688, 1699]
-        },
-        start_position: { position: 'not-random', x: 3, y: 1 },
-        class: 'level3'
+        class: 'forest'
     },
     'outside': {
         'map': 'Jrpg',
@@ -68,9 +79,9 @@ var level = {
             "S..................S                                                  ",
             "SS.SSSSSSSSSSSSSS.SS                                                  ",
             "~S.S            S.S~                                                  ",
-            "~S.S BBBBBBBBBB S.S~                                                  ",
-            "~S.S BWWWWWWSSB S.S~                                                  ",
-            "~S.S BWWWWWWSSB S.S~                                                  ",
+            "~S.S UUUUUUUSSS S.S~                                                  ",
+            "~S.S uuuuuuuS.S S.S~                                                  ",
+            "~S.S yyyyyyySSS S.S~                                                  ",
             "~S.S BBdBBBBBBB S.S~                                                  ",
             "~S.S            S.S~                                                  ",
             "~S.S            S.S~ TrttT tt  TT ttTrr rsPsPPssCjjsjjjjsjjssjjsjjjjjs",
@@ -83,27 +94,27 @@ var level = {
             "SSZS~~.~~~~~~~~~SZSS~T  .   tt  T tt  rrssssss.sCsssssjjjsjjjsCssCssjj",
             "~~~~~~.~~  r   ~~~~~~   . r  T       r   sCssCs.sjsisssssssjjssissssjs",
             " t    .  h       t r~~   .              r sssss.s jsssssjjjjsjsssssssj",
-            " TT   .hhh  tt   t Tt~    .    t Tt rttT   r   . rjjssssssjjssjjsCsssj",
+            " TT  ..hhh  tt   t Tt~    .    t Tt rttT   r   . rjjssssssjjssjjsCsssj",
             "t hh . t h tt TT  T  ~T t . T   t  t  T    hr  . rissssssssjjCssssssjj",
-            "t th .  t         t ~t  r .       tt     tt th. TssCsissjjjsjsCsssjjsj",
+            "t th..  t         t ~t  r .       tt     tt th. TssCsissjjjsjsCsssjjsj",
             " t  .   r  T  r   t ~  T   .   r       r   hhh.  tisissssjsssissssssjj",
-            "t   ..........   Tt ~ T  t  ...................hhrissssssCssssisCssssj",
+            "t  ...........   Tt ~ T  t  ...................hhrissssssCssssisCssssj",
             " T .r           t  t ~  Ttt t   tt T        Tt. tssisssCissssssjssssjs",
-            "t .   ~~    r    tT t~     t         tt  Tt   .  tsCsjjsssssssjjsissjs",
+            "t ..  ~~    r    tT t~     t         tt  Tt   .  tsCsjjsssssssjjsissjs",
             "~~.~~~~T~~~~  t    t  ~~  tt   t  TT  rt   tt . t Cjsssssissssssisssjj",
             "~~.~~~      ~~~  ~~~~ t ~~~~~    ~~~t    t  T .  TjjCsjsssjsssjsssCssj",
             "T .   t r t  T ~~  r ~~~ T T ~~~~ t ~~~~ r    .  tsjjj jjjjjjjsjjjsjjs",
-            "t . TT  t       Tt  tT tr r tTtBBBB BBBB~ ~~  . r       jjmm r        ",
-            "Tt.    tt  T tt   t  Tt  T tT  BWWBtBWWB ~  ~~:~~~~~ r  mmmmmm        ",
-            " t .  tt     t t     T        TBWWB BWWB    t .  T ~~~~~ mm mm        ",
-            "t  . hhTh tt   t  ttt tbbb     BWWB BWWB T    . T      r~~~~~~        ",
-            "tBBB. hhh TT   t   Tt Tb b     BBdB BBdB      .  r  Tr   mmmm         ",
-            " BWB.  hh     t        z         .  r .       . t  hh    mm m         ",
-            "tBdB .          .......K................................... mm        ",
-            "t .   ..........       z b      BBBdBB BBdBBr .  t      mm ..<        ",
-            " r ...tt T TT   tt T T bbb   t  BWWWWB BWWWB  . t   T TT     m        ",
-            "T TttT  tTT tttt tTT   t  Ttt tTBBBBBBtBBBBB  .  T hT   m m mm        ",
-            " TT T r TTttT TT ttT   ttT  T trt t hhh   t   .  TTh       mm         ",
+            "t . TT  t       Tt  tT tr r tTtUUUU UUUU~ ~~  . r       jjmm r        ",
+            "Tt..   tt  T tt   t  Tt  T tT  uuuutuuuu ~  ~~:~~~~~ r  mmmmmm        ",
+            " t .  tt     t<t     T        Tyyyy yyyy    t .  T ~~~~~ mm mm        ",
+            "t  ..hhTh tt   t  ttt tbbb     BBBB BBBB T    . T      r~~~~~~        ",
+            "tUUU. hhh TT   t   Tt Tb b     BBdB BBdB      .  r  Tr   mmmm         ",
+            " yyy.. hh     t        z         .  r .       . t  hh    mm m         ",
+            "tBdB .         ........K................................... mm        ",
+            "t .. ...........       z b         .     .  r .  t      mm...<        ",
+            " r ...tt T TT   tt T T bbb   t  UUUUUU UUUUU  . t   T TT     m        ",
+            "T TttT  tTT tttt tTT   t  Ttt tTyyyyyytyyyyy  .  T hT   m m mm        ",
+            " TT T r TTttT TT ttT   ttT  T trBBBBBBhBBBBB ..  TTh       mm         ",
             "t httt T     t Ttht t     T  trhhrhhhh  T hhh. h r  hh m rm mm        ",
             " thh  h       T hhh  T    TtTThmhhhhh hh hhh .rrT mmhmmmm hmm         ",
             "t t hh    TT T tt     T t   t hm hh  hhh hhhh.hh Thhmhhh  hmmm        ",
@@ -132,6 +143,7 @@ var level = {
             { position: 'not-random', level: 'blacksmith', x: 41, y: 37, doorX: 5, doorY: 1 },
             { position: 'not-random', level: 'cave', x: 61, y: 37, doorX: 1, doorY: 7 },
             { position: 'not-random', level: 'sanctuary', x: 35, y: 37, doorX: 5, doorY: 1 },
+            { position: 'not-random', level: 'forest', x: 14, y: 32, doorX: -1, doorY: -1 },
         ],
         'monsters': [
             {

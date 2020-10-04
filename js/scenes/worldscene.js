@@ -68,10 +68,12 @@ var WorldScene = new Phaser.Class({
         // place the player
         if (input.x == -1) {
             var [x, y] = engine.getFreePosition();
+            this.player = this.physics.add.sprite(x, y, 'player', 6);
         } else {
             var [x, y] = [input.x, input.y]
+            this.player = this.physics.add.sprite(32 * x + 16, 32 * y + 16, 'player', 6);
         }
-        this.player = this.physics.add.sprite(32 * x + 16, 32 * y + 16, 'player', 6);
+        
 
         // add doors 
         this.doors = this.physics.add.group({ classType: Door });
@@ -79,7 +81,15 @@ var WorldScene = new Phaser.Class({
         for (let i = 0; i < doors.length; i++) {
             if (doors[i].position == 'random') {
                 let [x, y] = engine.getFreePosition();
-                var door = new Door(this, x, y, doors[i].level);
+                var door = new Door(
+                    this, 
+                    x, 
+                    y, 
+                    doors[i].level, 
+                    doors[i].doorX,
+                    doors[i].doorY,
+                    );
+                this.physics.add.sprite(x,y, 'angband', engine.translateTile('>'));   
             } else {
                 var door = new Door(
                     this,
