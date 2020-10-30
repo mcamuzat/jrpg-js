@@ -280,7 +280,7 @@ var level = {
                     "blue turtle",
                     "yellow turtle",
                 ],
-                vocabulary: ['hiraganawords','katakanaword', 'kanawords']
+                vocabulary: ['hiraganawords','katakanawords', 'kanawords']
             },
         ],
         class: 'outside'
